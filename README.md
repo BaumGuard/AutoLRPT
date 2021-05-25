@@ -22,7 +22,7 @@ There you can open the file `predict.qth` and enter your callsign, your coordina
 `nano predict.qth`<br />
 Entering the longitude works differently in `predict` than you might expect. The angle starts at 0° W with 0° and goes around the globe until it reaches 0° W again at 360°.<br />
 <br />
-Unfortunately, Meteor M2 isn't registered in `predict` by default. Consequently you have to add it yourself by retrieving the TLE data (https://www.n2yo.com/satellite/?s=40069) frmo it and replace one satellite in `predict.tle` by the TLE data. Above the TLE data from Meteor M2 you have to add the line "METEOR-M2".<br />
+Unfortunately, Meteor M2 isn't registered in `predict` by default. Consequently you have to add it yourself by retrieving the TLE data (https://www.n2yo.com/satellite/?s=40069) frmo it and replace one satellite in `predict.tle` by the TLE data. Above the TLE data from Meteor M2 you have to add the line `METEOR-M2`.<br />
 `predict` should now be able to work.<br />
 <br />
 **at**<br />
