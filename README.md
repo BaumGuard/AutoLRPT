@@ -1,5 +1,5 @@
 # AutoLRPT
-AutoLRPT is a small program that allows you to receive LRPT images from Meteor M2 automatically using mlrpt.<br />
+AutoLRPT is a small program that allows you to receive LRPT images from Meteor M2 automatically by using mlrpt.<br />
 
 ## Dependencies
 - `mlrpt`: http://5b4az.org/ / https://github.com/dvdesolve/mlrpt<br />
@@ -18,11 +18,11 @@ For most distributions, `predict` is available in the official respositories. In
 <br />
 After having installed `predict`, you can navigate into its directory:<br />
 `cd ~/.predict`<br />
-Then you can open the file `predict.qth` and enter your callsign, your coordinates and your height above the sea level:<br />
+There you can open the file `predict.qth` and enter your callsign, your coordinates and your height above the sea level (meters):<br />
 `nano predict.qth`<br />
-Entering the longitude works different in `predict` than you might expect. The angle starts at 0° W with 0° and goes around the globe until it reaches 0° W again at 360°.<br />
+Entering the longitude works differently in `predict` than you might expect. The angle starts at 0° W with 0° and goes around the globe until it reaches 0° W again at 360°.<br />
 <br />
-Unfortunately, Meteor M2 isn't registered in `predict` by default. Consequently you have to add it yourself by retrieving the TLE data (https://www.n2yo.com/satellite/?s=40069) and replace one satellite in `predict.tle` by the TLE data. Above the TLE data from Meteor M2 you have to add the line "METEOR-M2".<br />
+Unfortunately, Meteor M2 isn't registered in `predict` by default. Consequently you have to add it yourself by retrieving the TLE data (https://www.n2yo.com/satellite/?s=40069) frmo it and replace one satellite in `predict.tle` by the TLE data. Above the TLE data from Meteor M2 you have to add the line "METEOR-M2".<br />
 `predict` should now be able to work.<br />
 <br />
 **at**<br />
@@ -41,13 +41,13 @@ Clone the repository to your home directory:<br />
 <br />
 <br />
 ## Usage
-Go into the directory of `AutoLRPT`...<br />
+Navigate into the directory of `AutoLRPT`...<br />
 `cd AutoLRPT`<br />
 ...and start `AutoLRPT` by running<br />
 `java -jar AutoLRPT.jar`<br />
 <br />
-Now `AutoLRPT` has retrieved the starting time (AOS) of the upcoming pass from `predict` and scheduled the bash-script `start-mlrpt` with `at` at the given time.<br />
+Now `mlrpt` should start automatially when Meteor M2 passes over. You don't need to start `AutoLRPT` again manually afer the pass, since `AutoLRPT` will automatically schedule the next pass.<br />
 <br />
 <br />
 ## How it works
-When starting `AutoLRPT`, it retrieves the time of the upcoming pass from `predict` and stores it in the file `passes`. `AutoLRPT` now reads the first line of `passes`and creates a schedule for the bash-script `start-mlrpt` to be started at the time given in the first line using `at`. The combination of the java program and the bash-script is a loop that starts `AutoLRPT.jar` again when `mlrpt` has stopped. That way, the next pass is being scheduled automatically without the need to start `AutoLRPT` manually.
+When starting `AutoLRPT`, it retrieves the time of the upcoming pass from `predict` and stores it in the file `passes`. `AutoLRPT` now reads the first line of `passes`and creates a schedule for the bash-script `start-mlrpt` to be started at the time given in the first line using `at`. The combination of the java program and the bash-script results in a loop that starts `AutoLRPT.jar` again when `mlrpt` has stopped. That way, the next pass is being scheduled automatically without the need to start `AutoLRPT` manually.
