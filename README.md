@@ -6,7 +6,7 @@ AutoLRPT is a small program that allows you to receive LRPT images from Meteor M
 - `predict`<br />
 - `at`<br />
 - `JRE`<br />
-<br />
+
 ## Presupposed setup
 AutoLRPT uses `predict` to get the pass times for Meteor M2 and `at` to schedule when `mlrpt` should be started<br />
 <br />
@@ -49,8 +49,8 @@ Now `mlrpt` should start automatially when Meteor M2 passes over. You don't need
 You can view the schedule by running `atq`<br />
 If you want to abord passes you can delete the job number with `atrm`<br />
 <br />
-**Starting at boot**
-To start `AutoLRPT` at boot you can add the line `java -jar ~/AutoLRPT/AutoLRPT.jar` in /etc/rc.local
+**Starting at boot**<br />
+To start `AutoLRPT` at boot you can add the line `java -jar ~/AutoLRPT/AutoLRPT.jar` in `/etc/rc.local`
 <br />
 ## How it works
 When starting `AutoLRPT`, it retrieves the time of the upcoming pass from `predict` and stores it in the file `passes`. `AutoLRPT` now reads the first line of `passes`and creates a schedule for the bash-script `start-mlrpt` to be started at the time given in the first line using `at`. The combination of the java program and the bash-script results in a loop that starts `AutoLRPT.jar` again when `mlrpt` has stopped. That way, the next pass is being scheduled automatically without the need to start `AutoLRPT` manually.
