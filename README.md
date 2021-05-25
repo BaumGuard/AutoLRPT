@@ -30,16 +30,12 @@ Like `predict` you can install `at` from the official repositories as well.<br /
 To activate `at` run the following two commands:<br />
 `sudo systemctl start atd.service`<br />
 `sudo systemctl enable atd.service`<br />
-<br />
-<br />
 ## Setup of AutoLRPT<br />
 There is no need to compile `AutoLRPT` yourself, since there is already an executable jar file.<br />
 <br />
 Clone the repository to your home directory:<br />
 `cd`<br />
 `git clone https://github.com/BaumGuard/AutoLRPT`<br />
-<br />
-<br />
 ## Usage
 Navigate into the directory of `AutoLRPT`...<br />
 `cd AutoLRPT`<br />
@@ -48,6 +44,6 @@ Navigate into the directory of `AutoLRPT`...<br />
 <br />
 Now `mlrpt` should start automatially when Meteor M2 passes over. You don't need to start `AutoLRPT` again manually afer the pass, since `AutoLRPT` will automatically schedule the next pass.<br />
 <br />
-<br />
+You can view the schedule by running `atq`<br />
 ## How it works
 When starting `AutoLRPT`, it retrieves the time of the upcoming pass from `predict` and stores it in the file `passes`. `AutoLRPT` now reads the first line of `passes`and creates a schedule for the bash-script `start-mlrpt` to be started at the time given in the first line using `at`. The combination of the java program and the bash-script results in a loop that starts `AutoLRPT.jar` again when `mlrpt` has stopped. That way, the next pass is being scheduled automatically without the need to start `AutoLRPT` manually.
