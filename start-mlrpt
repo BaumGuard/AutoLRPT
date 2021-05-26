@@ -1,0 +1,6 @@
+#!/bin/bash
+
+killall gqrx
+mlrpt
+sleep 3m
+java -jar ~/AutoLRPT/AutoLRPT.jar
