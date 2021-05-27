@@ -58,7 +58,7 @@ public class AutoLRPT {
 		Process at;
 		
 		try {
-			at = Runtime.getRuntime().exec("at -f " + homePath + "/start-mlrpt " + hour + ":" + minute);
+			at = Runtime.getRuntime().exec("at -Mf " + homePath + "/start-mlrpt " + hour + ":" + minute);
 		} catch (Exception c) {
 			c.printStackTrace();
 		}
