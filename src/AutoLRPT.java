@@ -11,8 +11,8 @@ public class AutoLRPT {
 	public static void main(String[] args) {
 
 		//Path to folder AutoLRPT and to the file passes
-		String homePath = System.getProperty("user.home") + "/AutoLRPT";
-		String passesPath = System.getProperty("user.home") + "/AutoLRPT/passes";
+		String homePath = System.getProperty("/root/AutoLRPT";
+		String passesPath = System.getProperty("/root/AutoLRPT/passes";
 
 		
 		//Executing predict to get the pass times and save it in "passes"
