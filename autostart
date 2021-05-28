@@ -6,3 +6,5 @@ echo "Name=AutoLRPT" >> /etc/xdg/autostart/AutoLRPT.desktop
 echo "Type=Application" >> /etc/xdg/autostart/AutoLRPT.desktop
 echo "Exec=java -jar $HOME/AutoLRPT/AutoLRPT.jar" >> /etc/xdg/autostart/AutoLRPT.desktop
 echo "Terminal=false" >>  /etc/xdg/autostart/AutoLRPT.desktop
+
+nano /etc/xdg/autostart/AutoLRPT.desktop
