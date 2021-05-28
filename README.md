@@ -8,7 +8,6 @@ AutoLRPT is a small program that allows you to receive LRPT images from Meteor M
 - `JRE`<br />
 
 ## Presupposed setup
-<br />
 Gain root access before you continue: `sudo -i`
 <br />
 AutoLRPT uses `predict` to get the pass times for Meteor M2 and `at` to schedule when `mlrpt` should be started<br />
