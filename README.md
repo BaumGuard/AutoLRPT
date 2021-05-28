@@ -49,10 +49,10 @@ Now `mlrpt` should start automatially when Meteor M2 passes over. You don't need
 You can view the schedule by running `atq`<br />
 If you want to abord passes you can delete the job number with `atrm`<br />
 <br />
-**Starting at boot**<br />
+## Starting at boot<br />
 To start `AutoLRPT` at boot you have to execute the script `autostart`:<br />
 `sudo bash autostart`<br />
-Shortly after you have started the script, `nano` will open a file. In the fourth line you will find a file path. Replace `/root` by the path of your home folder. After that, press `Ctrl+O` to save it and `Ctrl+X` to exit.
+Shortly after you have started the script, `nano` will open a file. In the fourth line you will find a file path. Replace `/root` by the path of your home folder. After that, press `Ctrl+O` to save it and `Ctrl+X` to exit.<br />
 <br />
 ## How it works
 When starting `AutoLRPT`, it retrieves the time of the upcoming pass from `predict` and stores it in the file `passes`. `AutoLRPT` now reads the first line of `passes`and creates a schedule for the bash-script `start-mlrpt` to be started at the time given in the first line using `at`. The combination of the java program and the bash-script results in a loop that starts `AutoLRPT.jar` again when `mlrpt` has stopped. That way, the next pass is being scheduled automatically without the need to start `AutoLRPT` manually.
