@@ -2,5 +2,5 @@
 
 killall gqrx
 mlrpt
-sleep 3m
+sleep 20m
 java -jar ~/AutoLRPT/AutoLRPT.jar
