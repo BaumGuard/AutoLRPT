@@ -22,9 +22,11 @@ For most distributions, `predict` is available in the official respositories. In
 <br />
 After having installed `predict`, you can navigate into the folder `.predict` and open `predict.qth`:<br />
 `cd .predict`<br />
-`rm predict.qth`<br />
+`nano predict.qth`<br />
 Enter your name/callsign, your coordinates and your height:<br />
 Entering the longitude works differently in `predict` than you might expect. The longitude angle starts at 0° W with 0° and goes around the globe until it reaches 0° W again at 360°.<br />
+If your longitude is negative when you are living in the west, you have to make it positive: `+ -> -`<br />
+If your longitude is positive when you are living in the east, you have to subtract it from 360°: `360°-x`<br />
 <br />
 Unfortunately, Meteor M2 isn't registered in `predict` by default. Consequently you have to add it yourself by retrieving the TLE data (https://www.n2yo.com/satellite/?s=40069) from it and replace one satellite in `predict.tle` by the TLE data. Above the TLE data from Meteor M2 you have to add the line `METEOR-M2`.<br />
 `predict` should now be able to work.<br />
