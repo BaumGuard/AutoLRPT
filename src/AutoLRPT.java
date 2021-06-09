@@ -53,12 +53,17 @@ public class AutoLRPT {
 		int hour = (Integer.parseInt(timeArray[0]) - offset)%24;
 		if (hour<0) {hour=24+hour;};
 		int minute = Integer.parseInt(timeArray[1]);
+int second = Integer.parseInt(timeArray[2]);
 		
 		String minuteString;
 		
+
+if (second>30) {minute=minute+1;};
+if (minute==60) {minute=0; hour=hour+1;};
+
 		if (minute<10) {minuteString="0"+minute;} else {minuteString=Integer.toString(minute);};
 
-		
+
 		//Scheduling the reception with at
 		Process at;
 		
