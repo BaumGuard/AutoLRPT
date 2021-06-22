@@ -1,6 +1,15 @@
 #!/bin/bash
 
 killall gqrx
-mlrpt
+
+if [ $(date +"%H")>15 ]
+then
+  mlrpt -i
+  
+else
+  mlrpt
+  
+fi
+
 sleep 20m
 java -jar ~/AutoLRPT/AutoLRPT.jar
