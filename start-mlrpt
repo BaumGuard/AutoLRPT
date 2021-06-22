@@ -2,7 +2,7 @@
 
 killall gqrx
 
-if [ $(date +"%H")>15 ]
+if [ $(date +"%H") -gt 15 ]
 then
   mlrpt -i
   
