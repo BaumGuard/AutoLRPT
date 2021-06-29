@@ -2,6 +2,8 @@
 
 killall gqrx
 
+sleep 5s
+
 if [ $(date +"%H") -gt 15 ]
 then
   mlrpt -i
