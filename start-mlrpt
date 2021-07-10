@@ -1,11 +1,14 @@
 #!/bin/bash
 
-# This bash script controls the reception itself, whereas AutoLRPT.jar only schedules the pass time.
-# The combination of both programs works like an infinite loop, which always starts the other program after the recent one has finished.
+# This bash script controls the reception itself,
+# whereas AutoLRPT.jar only schedules the pass time.
+# The combination of both programs works like an infinite loop,
+# which always starts the other program after the recent one has finished.
 
 
 # Programs to be closed before mlrpt is being started
-# Only one program can access an SDR at a time and, thus, mlrpt will crash immediately if another SDR-related program is already running.
+# Only one program can access an SDR at a time and, thus,
+# mlrpt will crash immediately if another SDR-related program is already running.
 # You can add more programs if you want to (Pattern: killall [program])
 killall gqrx
 
@@ -14,8 +17,10 @@ sleep 5s
 
 
 # Rotate images received in the evening
-# Whereas Meteor-M2 is passing from North to South in the morning, it passes over from South to North in the evenings.
-# Because of that, the images received in the evening are upside down by default, but this if-statement rotates them automatically.
+# Whereas Meteor-M2 is passing from North to South in the morning,
+# it passes over from South to North in the evenings.
+# Because of that, the images received in the evening are upside down 
+# by default, but this if-statement rotates them automatically.
 # If you don't like this feature you can replace the if statement (if -> to) by "mlrpt"
 if [ $(date +"%H") -gt 15 ]
 then
@@ -26,6 +31,6 @@ else
   
 fi
 
-#Restarting AutoLRPT after mlrpt has finished to schedule the next pass.
+# Restarting AutoLRPT after mlrpt has finished to schedule the next pass.
 sleep 20m
 java -jar ~/AutoLRPT/AutoLRPT.jar
