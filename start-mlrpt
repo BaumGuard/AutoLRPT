@@ -21,7 +21,7 @@ sleep 5s
 # it passes over from South to North in the evenings.
 # Because of that, the images received in the evening are upside down 
 # by default, but this if-statement rotates them automatically.
-# If you don't like this feature you can replace the if statement (if -> to) by "mlrpt"
+# If you don't like this feature you can replace the if statement (if -> to) by mlrpt.
 if [ $(date +"%H") -gt 15 ]
 then
   mlrpt -i
