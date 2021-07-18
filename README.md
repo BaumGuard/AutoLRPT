@@ -9,7 +9,6 @@ https://www.youtube.com/watch?v=_usBY-Yj-jE<br />
 - `mlrpt`: http://5b4az.org/ / https://github.com/dvdesolve/mlrpt<br />
 - `predict`<br />
 - `at`<br />
-- `JRE`<br />
 
 ## Presupposed setup
 AutoLRPT uses `predict` to get the pass times for Meteor M2 and `at` to schedule when `mlrpt` should be started<br />
@@ -38,8 +37,6 @@ To activate `at` run the following two commands:<br />
 `sudo systemctl enable atd.service`<br />
 <br />
 ## Setup of AutoLRPT<br />
-There is no need to compile `AutoLRPT` yourself, since there is already an executable jar file.<br />
-<br />
 Clone AutoLRPT into your home directory:<br />
 `cd`<br />
 `git clone https://github.com/BaumGuard/AutoLRPT`<br />
@@ -47,8 +44,8 @@ Clone AutoLRPT into your home directory:<br />
 ## Usage
 Navigate into the directory of `AutoLRPT`...<br />
 `cd AutoLRPT`<br />
-...and start `AutoLRPT` by running<br />
-`java -jar AutoLRPT.jar`<br />
+...and start the script`scheduler` by running<br />
+`bash scheduler`<br />
 <br />
 Now `mlrpt` should start automatially when Meteor M2 passes over. You don't need to start `AutoLRPT` again manually afer the pass, since `AutoLRPT` will automatically schedule the next pass.<br />
 <br />
@@ -59,6 +56,3 @@ If you want to abord passes you can delete the job number with `atrm`<br />
 To start `AutoLRPT` at boot you have to execute the script `autostart`:<br />
 `sudo bash autostart`<br />
 Shortly after you have started the script, `nano` will open a file. In the fourth line you will find a file path. Replace `/root` by the path of your home folder. After that, press `Ctrl+O` to save it and `Ctrl+X` to exit.<br />
-<br />
-## How it works
-When starting `AutoLRPT`, it retrieves the time of the upcoming pass from `predict` and stores it in the file `passes`. `AutoLRPT` now reads the first line of `passes`and creates a schedule for the bash-script `start-mlrpt` to be started at the time given in the first line using `at`. The combination of the java program and the bash-script results in a loop that starts `AutoLRPT.jar` again when `mlrpt` has stopped. That way, the next pass is being scheduled automatically without the need to start `AutoLRPT` manually.
