@@ -1,10 +1,6 @@
 # AutoLRPT
 AutoLRPT is a small program that allows you to receive LRPT images from Meteor M2 automatically by using mlrpt.<br />
 
-## Video guide
-You can watch this video to install AutoLRPT on Raspbian:<br />
-https://www.youtube.com/watch?v=_usBY-Yj-jE<br />
-
 ## Dependencies
 - `mlrpt`: http://5b4az.org/ / https://github.com/dvdesolve/mlrpt<br />
 - `predict`<br />
