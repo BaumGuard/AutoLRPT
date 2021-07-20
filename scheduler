@@ -9,7 +9,7 @@ passmin=`cut -c 4-5 <<< $passtime`
 # Convert from UTC to local time
 tzoffset=`date +%z | cut -c 1-3`
 
-passhour=$(($passhour + $tzoffset))
+passhour=$((10#$passhour + 10#$tzoffset))
 
 
 # Testing if pass has already been scheduled
