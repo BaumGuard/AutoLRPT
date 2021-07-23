@@ -1,16 +1,29 @@
 #!/bin/bash
 
 # Get time of the upcoming pass from predict
-passtime=`predict '-p' METEOR-M2 | grep -o -m1 [0-2][0-9]:[0-5][0-9]`
+passtime=`predict '-p' METEOR-M2 | grep -o -m1 [0-2][0-9]:[0-5][0-9]:[0-5][0-9]`
 
 passhour=`cut -c 1-2 <<< $passtime`
 passmin=`cut -c 4-5 <<< $passtime`
+passsec=`cut -c 7-8 <<< $passtime`
 
 # Convert from UTC to local time
 tzoffset=`date +%z | cut -c 1-3`
 
 passhour=$((10#$passhour + 10#$tzoffset))
 
+if [ passsec -ge 30 ]; then
+passmin=$passmin+1
+fi
+
+if [ passmin -eq 60 ]; then
+passhour=passhour+1
+passmin="00"
+fi
+
+if [ passmin -lt 10 ]; then
+passmin=0$passmin
+fi
 
 # Testing if pass has already been scheduled
 # Scheduling the upcoming pass using at if no schedule exists yet
