@@ -29,10 +29,6 @@ if [ $passhour -ge 24 ]; then
 passhour=$(expr $passhour % 24)
 fi
 
-if [ $passmin -lt 10 ]; then
-passmin=0$passmin
-fi
-
 # Testing if the pass has already been scheduled
 # Scheduling the upcoming pass using at if no schedule exists yet
 times=`atq | grep -o [0-2][0-9]:[0-5][0-9]`
