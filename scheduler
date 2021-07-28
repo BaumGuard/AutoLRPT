@@ -23,6 +23,7 @@ fi
 
 if [ $passmin -eq 60 ]; then
 passhour=$(expr $passhour + 1)
+passmin="00"
 fi
 
 if [ $passhour -ge 24 ]; then
