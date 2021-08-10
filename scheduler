@@ -21,13 +21,13 @@ if [ $passsec -ge 30 ]; then
 passmin=$(expr $passmin + 1)
 fi
 
+if [ $passmin -lt 10 ] && [ $passsec -ge 30 ]; then
+passmin=0$passmin
+fi
+
 if [ $passmin -eq 60 ]; then
 passhour=$(expr $passhour + 1)
 passmin="00"
-fi
-
-if [ $passmin -lt 10 ] && [ $passsec -ge 30 ]; then
-passmin=0$passmin
 fi
 
 if [ $passhour -ge 24 ]; then
