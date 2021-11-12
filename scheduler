@@ -1,39 +1,19 @@
 #!/bin/bash
 
 # Setting the color channels in ~/mlrpt/default.cfg
-# Might not work yet.
 wget http://happysat.nl/Meteor/html/Meteor_Status.html
-apid64=`sed '180q;d' Meteor_Status.html`
-apid65=`sed '181q;d' Meteor_Status.html`
 apid66=`sed '182q;d' Meteor_Status.html`
-apid67=`sed '190q;d' Meteor_Status.html`
 apid68=`sed '191q;d' Meteor_Status.html`
-apid69=`sed '192q;d' Meteor_Status.html`
 
-if [[ $apid64 == *"On"* ]]; then
-  sed 's/"# Red APID (mlrpt Channel 0)\n6[4-9]"/"# Red APID (mlrpt Channel 0)\n64"/g' ~/mlrpt/default.cfg
+if [[ $apid66 == *"On"* ]] ; then
+sed -i '123s/.*/66/' ~/mlrpt/default.cfg
 fi
 
-if [[ $apid65 == *"On"* ]]; then
-  sed 's/"# Green APID (mlrpt Channel 1)\n6[4-9]"/"# Green APID (mlrpt Channel 1)\n65"/g' ~/mlrpt/default.cfg
+if [[ $apid68 == *"On"* ]] ; then
+sed -i '123s/.*/68/' ~/mlrpt/default.cfg
 fi
 
-if [[ $apid66 == *"On"* ]]; then
-  sed 's/"# Blue APID (mlrpt Channel 2)\n6[4-9]"/"# Blue APID (mlrpt Channel 2\n66"/g' ~/mlrpt/default.cfg
-fi
-
-if [[ $apid67 == *"On"* ]]; then
-  sed 's/"# Red APID (mlrpt Channel 0)\n6[4-9]"/"# Red APID (mlrpt Channel 0)\n67"/g' ~/mlrpt/default.cfg
-fi
-
-if [[ $apid68 == *"On"* ]]; then
-  sed 's/"# Green APID (mlrpt Channel 1)\n6[4-9]"/"# Green APID (mlrpt Channel 1)\n68"/g' ~/mlrpt/default.cfg
-fi
-
-if [[ $apid69 == *"On"* ]]; then
-  sed 's/"# Blue APID (mlrpt Channel 2)\n6[4-9]"/"# Blue APID (mlrpt Channel 2)\n69"/g' ~/mlrpt/default.cfg
-fi
-
+rm ~/AutoLRPT/Meteor_Status.html
 
 
 # Get time of the upcoming pass from predict
