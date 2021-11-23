@@ -48,6 +48,8 @@ Now `mlrpt` should start automatially when Meteor M2 passes over. You don't need
 You can view the schedule by running `atq`<br />
 If you want to abord passes you can delete the job number with `atrm`<br />
 <br />
+## Additional options
+LRPT images received in the evenings are usually darker than those received in the mornings. There will also be a lack of details in the images. If you want to disable the reception of images in the evening, you can change the value of `evening_rec` from 1 to 0 in the script `scheduler`.
 ## Starting at boot<br />
 To start `AutoLRPT` at boot you have to execute the script `autostart`:<br />
 `sudo bash autostart`<br />
