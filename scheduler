@@ -1,5 +1,11 @@
 #!/bin/bash
 
+## Image reception in the evening
+# In the evening the lrpt images tend to become quite dark and not that colorful as they are in the morning.
+# There are also not that many details visible in the images anymore.
+# If you want to disable the image reception in the evenings, you can change the value from 1 to 0.
+evening_rec=1;
+
 # Setting the color channels in ~/mlrpt/default.cfg
 wget http://happysat.nl/Meteor/html/Meteor_Status.html
 apid66=`sed '182q;d' Meteor_Status.html`
@@ -53,6 +59,13 @@ fi
 # Testing if the pass has already been scheduled
 # Scheduling the upcoming pass using at if no schedule exists yet
 times=`atq | grep -o [0-2][0-9]:[0-5][0-9]`
+
+if [[ $evening_rec -eq 0 ]]; then
+if [[ $passhour-gt> 15 ]]; then
+at -Mf ~/AutoLRPT/scheduler $passhour:$passmin
+fi
+fi
+
 if [[ $times != *$passhour:$passmin* ]]; then
   at -Mf ~/AutoLRPT/start-mlrpt $passhour:$passmin
 fi
