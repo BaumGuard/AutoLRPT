@@ -1,10 +1,16 @@
 #!/bin/bash
 
+### Config part ###
+
 ## Image reception in the evening
 # In the evening the lrpt images tend to become quite dark and not that colorful as they are in the morning.
 # There are also not that many details visible in the images anymore.
 # If you want to disable the image reception in the evenings, you can change the value from 1 to 0.
 evening_rec=1;
+
+
+### Automatic part ###
+## Changing the commands below might cause malfunctions in the AutoLRPT!
 
 # Setting the color channels in ~/mlrpt/default.cfg
 wget http://happysat.nl/Meteor/html/Meteor_Status.html
