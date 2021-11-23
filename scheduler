@@ -70,8 +70,11 @@ if [[ $evening_rec -eq 0 ]]; then
 if [[ $passhour -gt 14 ]]; then
 at -Mf ~/AutoLRPT/scheduler $passhour:$passmin
 fi
-fi
+
+else
 
 if [[ $times != *$passhour:$passmin* ]]; then
   at -Mf ~/AutoLRPT/start-mlrpt $passhour:$passmin
+fi
+
 fi
