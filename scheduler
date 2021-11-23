@@ -61,7 +61,7 @@ fi
 times=`atq | grep -o [0-2][0-9]:[0-5][0-9]`
 
 if [[ $evening_rec -eq 0 ]]; then
-if [[ $passhour-gt> 15 ]]; then
+if [[ $passhour -gt 15 ]]; then
 at -Mf ~/AutoLRPT/scheduler $passhour:$passmin
 fi
 fi
