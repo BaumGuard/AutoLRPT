@@ -14,12 +14,23 @@ killall gqrx
 # Idle to make sure that all other SDR-programs are closed
 sleep 5s
 
-# Rotate images received in the evening
+## Image reception in the evening
+# In the evening the lrpt images tend to become quite dark and not that colorful as they are in the morning.
+# There are also not that many details visible in the images anymore.
+# If you want to disable the image reception in the evenings, you can change the value from 1 to 0.
+evening_rec=1
+
+
+## Flip images received in the evening
 # Whereas Meteor-M2 is passing from North to South in the morning,
 # it passes over from South to North in the evenings.
 # Because of that, the images received in the evening are upside down
 # by default, but this if-statement rotates them automatically.
-# If you don't like this feature you can remove -i
+# If you don't like this feature you can remove "-i"
+
+if [[ ($evening_rec -eq 0) && ($(date +"%H") -gt 15) ]]; then
+echo ""
+else
 
 if [ $(date +"%H") -gt 15 ]; then
 mlrpt -i
@@ -27,6 +38,7 @@ mlrpt -i
 else
 mlrpt
 
+fi
 fi
 
 sleep 20m
