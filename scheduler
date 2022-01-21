@@ -7,7 +7,7 @@
 
 # Setting and updating the color channels in ~/mlrpt/default.cfg
 wget https://github.com/happysat/Meteor-M-N2-and-N2-2-Satellite-Operational-Status
-channels=`sed '1431q;d' wget https://github.com/happysat/Meteor-M-N2-and-N2-2-Satellite-Operational-Status`
+channels=`sed '1431q;d' Meteor-M-N2-and-N2-2-Satellite-Operational-Status`
 
 if [[ $channels == *"APID66"* ]] ; then
 sed -i '123s/.*/66/' ~/mlrpt/default.cfg
