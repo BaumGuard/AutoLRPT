@@ -1,12 +1,11 @@
 #!/bin/bash
 
-### Config part ##
+### scheduler ###
 
 
-### Automatic part ##
-## Changing the commands below might cause malfunctions in the AutoLRPT!
+## Changing the code below might cause malfunctions in the AutoLRPT!
 
-# Setting the color channels in ~/mlrpt/default.cfg
+# Setting and updating the color channels in ~/mlrpt/default.cfg
 wget http://happysat.nl/Meteor/html/Meteor_Status.html
 apid66=`sed '182q;d' Meteor_Status.html`
 apid68=`sed '191q;d' Meteor_Status.html`
@@ -22,34 +21,44 @@ fi
 rm ~/AutoLRPT/Meteor_Status.html
 
 
-# Get time of the upcoming pass from predict
+# Get the time of the upcoming pass from predict
 passtime=`predict '-p' METEOR-M2 | grep -o -m1 [0-2][0-9]:[0-5][0-9]:[0-5][0-9]`
 
 passhour=`cut -c 1-2 <<< $passtime`
 passmin=`cut -c 4-5 <<< $passtime`
 passsec=`cut -c 7-8 <<< $passtime`
+
 if [ $passhour -lt 10 ]; then
 passhour=`echo $passhour | cut -c 2-2`
 fi
+
 # Convert from UTC to local time
 tzoffset=`date +%z | cut -c 1-3`
 passhour=$(($passhour + $tzoffset))
+
+
+
 # If the pass starts later than half of a minute,
 # it will be scheduled one minute later for optimal
 # reception time.
+
 if [ $passsec -ge 30 ]; then
 passmin=$(expr $passmin + 1)
 fi
+
 if [ $passmin -lt 10 ] && [ $passsec -ge 30 ]; then
 passmin=0$passmin
 fi
+
 if [ $passmin -eq 60 ]; then
 passhour=$(expr $passhour + 1)
 passmin="00"
 fi
+
 if [ $passhour -ge 24 ]; then
 passhour=$(expr $passhour % 24)
 fi
+
 
 # Testing if the pass has already been scheduled
 # Scheduling the upcoming pass using at if no schedule exists yet
