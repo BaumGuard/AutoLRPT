@@ -6,17 +6,17 @@
 ## Changing the code below might cause malfunctions in the AutoLRPT!
 
 # Setting and updating the color channels in ~/mlrpt/default.cfg
-wget http://happysat.nl/Meteor/html/Meteor_Status.html
-apid66=`sed '182q;d' Meteor_Status.html`
-apid68=`sed '191q;d' Meteor_Status.html`
+wget https://github.com/happysat/Meteor-M-N2-and-N2-2-Satellite-Operational-Status
+channels=`sed '1431q;d' wget https://github.com/happysat/Meteor-M-N2-and-N2-2-Satellite-Operational-Status`
 
-if [[ $apid66 == *"On"* ]] ; then
+if [[ $channels == *"APID66"* ]] ; then
 sed -i '123s/.*/66/' ~/mlrpt/default.cfg
 fi
 
-if [[ $apid68 == *"On"* ]] ; then
+if [[ $channels == *"APID68"* ]] ; then
 sed -i '123s/.*/68/' ~/mlrpt/default.cfg
 fi
+
 
 rm ~/AutoLRPT/Meteor_Status.html
 
