@@ -18,7 +18,7 @@ sed -i '123s/.*/68/' ~/mlrpt/default.cfg
 fi
 
 
-rm ~/AutoLRPT/Meteor_Status.html
+rm ~/AutoLRPT/Meteor-M-N2-and-N2-2-Satellite-Operational-Status
 
 
 # Get the time of the upcoming pass from predict
