@@ -13,17 +13,17 @@ AutoLRPT uses `predict` to get the pass times for Meteor M2 and `at` to schedule
 If you haven't installed `mlrpt` yet, you can download it from one of the links mentioned above. Both pages also provide good documentation about the compilation, installation and setup.<br />
 <br />
 **predict**<br />
-For most distributions, `predict` is available in the official respositories. In case you can not find it there, you can also download it from here: https://www.qsl.net/kd2bd/predict.html<br />
+For most distributions, `predict` is available in the official respositories. In case you can not find it there, you can also download it from [here](https://www.qsl.net/kd2bd/predict.html)<br />
 <br />
 After having installed `predict`, you can navigate into the folder `.predict` and open `predict.qth`:<br />
 `cd .predict`<br />
-`nano predict.qth`<br />
-Enter your name/callsign, your coordinates and your height:<br />
+`nano predict.qth`<br /><br />
+Enter your name/callsign, your coordinates and your height.<br /><br />
 Entering the longitude works differently in `predict` than you might expect. The longitude angle starts at 0° W with 0° and goes around the globe until it reaches 0° W again at 360°.<br />
 If your longitude is negative when you are living in the west, you have to make it positive: `+ -> -`<br />
 If your longitude is positive when you are living in the east, you have to subtract it from 360°: `360°-x`<br />
 <br />
-Unfortunately, Meteor M2 isn't registered in `predict` by default. Consequently you have to add it yourself by retrieving the TLE data (https://www.n2yo.com/satellite/?s=40069) from it and replace one satellite in `predict.tle` by the TLE data. Above the TLE data from Meteor M2 you have to add the line `METEOR-M2`.<br />
+Unfortunately, Meteor M2 isn't registered in `predict` by default. Consequently you have to add it yourself by retrieving the [TLE data](https://www.n2yo.com/satellite/?s=40069) from it and replace one satellite in `predict.tle` by the TLE data. Above the TLE data from Meteor M2 you have to add the line `METEOR-M2`.<br />
 `predict` should now be able to work.<br />
 <br />
 **at**<br />
