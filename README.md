@@ -49,7 +49,11 @@ You can view the schedule by running `atq`<br />
 If you want to abord passes you can delete the job number with `atrm`<br />
 <br />
 ## Additional options
+**Reception in the evening**<br />
 LRPT images received in the evenings are usually darker than those received in the mornings. There will also be a lack of details in the images. If you want to disable the reception of images in the evening, you can change the value of `evening_rec` from 1 to 0 in the script `scheduler`.
+<br />
+<br />
+**Minimum elevation**<br />You can set the minimum elevation by changing the value of the variable `min_elev` in `start-mlrpt`.
 ## Starting at boot<br />
 To start `AutoLRPT` at boot you have to execute the script `autostart`:<br />
 `sudo bash autostart`<br />
