@@ -6,6 +6,9 @@ AutoLRPT is a small program that allows you to receive LRPT images from Meteor M
 - `predict`<br />
 - `at`<br />
 
+## Instruction video
+[Click here](https://www.youtube.com/watch?v=uuR2U2ZGEiU)
+
 ## Presupposed setup
 AutoLRPT uses `predict` to get the pass times for Meteor M2 and `at` to schedule when `mlrpt` should be started<br />
 <br />
