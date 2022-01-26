@@ -45,7 +45,7 @@ max_elev=`echo "${elev_array[*]}" | sort -nr | head -n1`
 
 
 # Minimum elevation check
-if [ $max_elev -ge $min_elev ]; then
+if [[ $max_elev -ge $min_elev ]]; then
 
 # Evening recording check
 if [[ ($evening_rec -eq 0) && ($(date +"%H") -gt 15) ]]; then
