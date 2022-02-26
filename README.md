@@ -53,10 +53,12 @@ If you want to abord passes you can delete the job number with `atrm`<br />
 <br />
 ## Additional options
 **Reception in the evening**<br />
-LRPT images received in the evenings are usually darker than those received in the mornings. There will also be a lack of details in the images. If you want to disable the reception of images in the evening, you can change the value of `evening_rec` from 1 to 0 in the script `scheduler`.
+All the settings are in the script `receive`!<br /><br />
+LRPT images received in the evenings are usually darker than those received in the mornings. There will also be a lack of details in the images. If you want to disable the reception of images in the evening, you can change the value of `evening_rec` from 1 to 0 in the script `receive`.<br />
+Also due to the opposite pass direction in the evenings, the images are upside down but AutoLRPT will flip them automatically. If you don't want that, you can disable this feature by setting `autoflip` to 0.
 <br />
 <br />
-**Minimum elevation**<br />You can set the minimum elevation by changing the value of the variable `min_elev` in `start-mlrpt`.
+**Minimum elevation**<br />You can set the minimum elevation by changing the value of the variable `min_elev` in `receive`.
 ## Starting at boot<br />
 To start `AutoLRPT` at boot you have to execute the script `autostart`:<br />
 `sudo bash autostart`<br />
