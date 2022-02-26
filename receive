@@ -1,0 +1,77 @@
+#!/bin/bash
+
+### start-mlrpt ###
+
+# This bash script controls the reception itself,
+# whereas the script scheduler only schedules the pass time.
+# The combination of both scripts works like an infinite loop,
+# that always starts the other script after the recent one has finished.
+
+
+## Programs to be closed before mlrpt is being started
+# Only one program can access an SDR at a time and, thus,
+# mlrpt will crash immediately if another SDR-accessing program is already running.
+# You can add more programs if you want to (Pattern: killall <program>)
+# killall gqrx
+
+# Idle to make sure that all other SDR-programs are closed
+# No need to change it.
+sleep 5s
+
+## Image reception in the evening
+# In the evening, the LRPT images tend to become quite dark and not that colorful as they are in the morning.
+# There are also not that many details visible in the images anymore.
+# If you want to disable the image reception in the evening, you can change the value from 1 to 0.
+evening_rec=1
+
+## Minimum elevation
+# You can set the variable below to your desired minimum elevation (unit: degrees).
+min_elev=0
+
+## Flip images in the evening
+# Unlike in the mornings, Meteor M2 passes over from South to North in the evenings.
+# Because of that the images are upside down by default in the evening.
+# AutoLRPT automatically flips images received in the evening by default.
+# If you don't want that you can set the variable below to 0.
+autoflip=0
+
+
+
+
+
+### CAUTION! Operational part ###
+# Changing the code below might lead to malfunctions!
+
+# Retrieving the elevations of the upcoming pass
+elevs=`predict '-p' METEOR-M2 | cut -c 35-36 | sed 's/ //g'`
+readarray -t elev_array <<< $elevs
+
+# Extract the highest elevation of the pass.
+IFS=$'\n'
+max_elev=`echo "${elev_array[*]}" | sort -nr | head -n1`
+
+# Minimum elevation check
+if [[ $max_elev -ge $min_elev ]]; then
+
+# Evening recording check
+if [[ $evening_rec -eq 0 ]] && [[ $(date +"%H") -gt 15 ]]; then
+echo ""
+
+else
+
+# Rotate images in the evening
+
+if [[ $(date +"%H") -gt 15 ]] && [[ $autoflip -eq 1 ]]; then
+
+mlrpt -i
+
+else
+mlrpt
+
+fi
+fi
+fi
+
+
+sleep 20m
+bash ~/AutoLRPT/scheduler
