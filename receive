@@ -33,7 +33,7 @@ min_elev=0
 # Because of that the images are upside down by default in the evening.
 # AutoLRPT automatically flips images received in the evening by default.
 # If you don't want that you can set the variable below to 0.
-autoflip=0
+autoflip=1
 
 
 
