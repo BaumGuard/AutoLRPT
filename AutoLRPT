@@ -1,0 +1,106 @@
+#!/bin/bash
+
+### Config part ###
+
+## Reception of LRPT images in the evening
+# 0: No
+# 1: Yes
+evening_rec=1
+
+## Only record passes with a minimal elevation.
+# Possible values: 0-90
+min_elev=10
+
+## Rotate images in the evening
+# Due to the opposite pass direction the images will be upside down
+# by default. If you don't want the images to be rotated automatically,
+# set the value to 0.
+# 0: No auto rotation
+# 1: Auto rotation
+autoflip=1
+
+
+
+
+### Operational part ###
+## Changing the code below might lead to malfunctions!
+
+# Infinite while loop to run AutoLRPT until the user cancels it.
+i=0
+
+while [[ $i -eq 0 ]]; do
+
+# Get the time of the upcoming pass from predict
+passtime=`predict '-p' METEOR-M2 | grep -o -m1 [0-2][0-9]:[0-5][0-9]:[0-5][0-9]`
+
+# Extracting the hour, minute and second of the upcoming pass (UTC).
+passhour=`cut -c 1-2 <<< $passtime`
+passmin=`cut -c 4-5 <<< $passtime`
+passsec=`cut -c 7-8 <<< $passtime`
+
+
+# Getting the current UTC time.
+hour=`date --utc +%H`
+min=`date --utc +%M`
+sec=`date --utc +%S`
+
+# Convert the pass time and system time into seconds.
+pass_fi=$(( 10#$passhour * 3600 + 10#$passmin * 60 + 10#$passsec ))
+utc_fi=$(( 10#$hour * 3600 + 10#$min * 60 + 10#$sec))
+
+
+# Calculating the difference between the pass time and the system time
+if [[ $pass_fi -lt $utc_fi ]]; then
+utc_fi=$(( 86400 - $utc_fi ))
+difr=$(( $pass_fi + $utc_fi ))
+
+else
+
+difr=$(( $pass_fi - $utc_fi ))
+fi
+
+if [[ $difr -lt 0 ]]; then
+difr=$(( 0 - $difr ))
+fi
+
+# Set an idle to wait until the satellite rises over the horizon
+sleep "$difr"s
+
+
+# Getting the maximal elevation of the upcoming pass
+elevs=`predict '-p' METEOR-M2 | cut -c 35-36 | sed 's/ //g'`
+readarray -t elev_array <<< $elevs
+
+IFS=$'\n'
+max_elev=`echo "${elev_array[*]}" | sort -nr | head -n1`
+
+
+# Minimum elevation check
+if [[ $max_elev -ge $min_elev ]]; then
+
+# Check for evening recording
+if [[ $evening_rec -eq 0 ]] && [[ 10#$(date +"%H") -gt 15 ]]; then
+echo ""
+
+else
+
+
+# Check for Autorotate and trigger mlrpt
+if [[ 10#$(date +"%H") -gt 15 ]] && [[ $autoflip -eq 1 ]]; then
+
+mlrpt -i
+
+else
+mlrpt
+
+fi
+
+fi
+fi
+
+# Idle for 20 minutes to safely schedule the next pass, although no
+# SDR has been connected during the recent pass.
+# This ensures that AutoLRPT will keep on running all the time.
+sleep 20m
+
+done
