@@ -4,13 +4,9 @@ AutoLRPT is a small program that allows you to receive LRPT images from Meteor M
 ## Dependencies
 - `mlrpt`: http://5b4az.org/ / https://github.com/dvdesolve/mlrpt<br />
 - `predict`<br />
-- `at`<br />
-
-## Instruction video
-[Click here](https://www.youtube.com/watch?v=uuR2U2ZGEiU)
 
 ## Presupposed setup
-AutoLRPT uses `predict` to get the pass times for Meteor M2 and `at` to schedule when `mlrpt` should be started<br />
+AutoLRPT uses `predict` to get the pass times for Meteor M2 and automatically start ´mlrpt´ when Meteor-M2 passes over.<br />
 <br />
 **mlrpt**<br />
 If you haven't installed `mlrpt` yet, you can download it from one of the links mentioned above. Both pages also provide good documentation about the compilation, installation and setup.<br />
@@ -29,12 +25,6 @@ If your longitude is positive when you are living in the east, you have to subtr
 Unfortunately, Meteor M2 isn't registered in `predict` by default. Consequently you have to add it yourself by retrieving the [TLE data](https://www.n2yo.com/satellite/?s=40069) from it and replace one satellite in `predict.tle` by the TLE data. Above the TLE data from Meteor M2 you have to add the line `METEOR-M2`.<br />
 `predict` should now be able to work.<br />
 <br />
-**at**<br />
-Like `predict` you can install `at` from the official repositories as well.<br />
-To activate `at` run the following two commands:<br />
-`sudo systemctl start atd.service`<br />
-`sudo systemctl enable atd.service`<br />
-<br />
 ## Setup of AutoLRPT<br />
 Clone AutoLRPT into your home directory:<br />
 `cd`<br />
@@ -43,23 +33,17 @@ Clone AutoLRPT into your home directory:<br />
 ## Usage
 Navigate into the directory of `AutoLRPT`...<br />
 `cd AutoLRPT`<br />
-...and start the script`scheduler` by running<br />
-`bash scheduler`<br />
+...and start the script`AutoLRPT` by running<br />
+`bash AutoLRPT`<br />
 <br />
 Now `mlrpt` should start automatially when Meteor M2 passes over. You don't need to start `AutoLRPT` again manually afer the pass, since `AutoLRPT` will automatically schedule the next pass.<br />
 <br />
-You can view the schedule by running `atq`<br />
-If you want to abord passes you can delete the job number with `atrm`<br />
-<br />
+If you want to stop AutoLRPT run `killall AutoLRPT`.
 ## Additional options
 **Reception in the evening**<br />
-All the settings are in the script `receive`!<br /><br />
-LRPT images received in the evenings are usually darker than those received in the mornings. There will also be a lack of details in the images. If you want to disable the reception of images in the evening, you can change the value of `evening_rec` from 1 to 0 in the script `receive`.<br />
+All the settings are in the top part of the script `AutoLRPT`!<br /><br />
+LRPT images received in the evenings are usually darker than those received in the mornings. There will also be a lack of details in the images. If you want to disable the reception of images in the evening, you can change the value of `evening_rec` from 1 to 0 in the script `AutoLRPT`.<br />
 Also due to the opposite pass direction in the evenings, the images are upside down but AutoLRPT will flip them automatically. If you don't want that, you can disable this feature by setting `autoflip` to 0.
 <br />
 <br />
 **Minimum elevation**<br />You can set the minimum elevation by changing the value of the variable `min_elev` in `receive`.
-## Starting at boot<br />
-To start `AutoLRPT` at boot you have to execute the script `autostart`:<br />
-`sudo bash autostart`<br />
-Shortly after you have started the script, `nano` will open a file. In the fourth line you will find a file path. Replace `/root` by the path of your home folder. After that, press `Ctrl+O` to save it and `Ctrl+X` to exit.<br />
