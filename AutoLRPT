@@ -1,0 +1,179 @@
+#!/bin/bash
+
+## --- CONFIG PART --- ##
+
+    ## Minimum elevation
+        # Only record passes higher than a certain elevation, since images of low
+        # passes will often have a worse quality.
+        # Possible values: 0 - 90
+        min_elev=0
+        
+    ## Record images in the evening
+        # Due to a lack of solar illumination, the images will be darker
+        # in the evenings than in the mornings.
+        # So, if you don't want to record evening passes, set "evening_rec" to 0.
+        evening_rec=1
+        
+    ## Autoflip images in the evening
+        # Because of the opposite pass direction in the evenings (South to North)
+        # the images received in the evenings will be upside down by default, but
+        # they can be automatically rotated.
+        # If you don't want that, set autoflip to 0
+        autoflip=1
+        
+        
+    ## Update color channels automatically
+        # Throughout the year, one of Meteor M2's APID channels will switch between
+        # 66 and 68. If the color channel isn't updated, the images will often be 
+        # quite dark.
+   
+        # AutoLRPT downloads the currently active channels from here:
+        # https://github.com/happysat/Meteor-M-N2-and-N2-2-Satellite-Operational-Status
+    
+        # Then it will update the channel in mlrpt's config file ~/mlrpt/default.cfg
+        upd_channels=1
+        
+        
+    ## Logging
+        # If you want AutoLRPT to log the passes in AutoLRPT.log, set "logging" to 1
+        logging=1
+
+        
+
+        
+        
+## --- OPERATIONAL PART --- ##
+## Handle with caution!
+
+
+# Infinite loop that will always schedule the next pass after the recent one is over
+while true; do
+
+# Automatic update of APID channels
+if [[ $upd_channels -eq 1 ]]; then
+
+    # Download the status file if it's not present in AutoLRPT's folder
+    if [[ -z $(find -name Meteor-M-N2-and-N2-2-Satellite-Operational-Status) ]]; then
+        git clone https://github.com/happysat/Meteor-M-N2-and-N2-2-Satellite-Operational-Status
+    fi
+
+    
+    # Entering the folder of the status file and updating the file
+    cd Meteor-M-N2-and-N2-2-Satellite-Operational-Status
+    git pull 1>/dev/null
+
+    
+    # Updating the APID channel in mlrpt's config file ~/mlrpt/default.cfg
+    if [[ $(sed '31q;d' README.md)=*"On"* ]]; then
+        sed -i '123s/.*/66/' ~/mlrpt/default.cfg
+
+    else
+        sed -i '123s/.*/68/' ~/mlrpt/default.cfg
+
+    fi
+    
+    # Return to ~/AutoLRPT
+    cd ..
+
+fi
+
+
+
+# Get the UTC time of the upcoming pass from predict
+passtime=`predict '-p' METEOR-M2 | grep -o -m1 [0-2][0-9]:[0-5][0-9]:[0-5][0-9]`
+
+# Extracting the hour, minute and second of the upcoming pass
+passhour=`cut -c 1-2 <<< $passtime`
+passmin=`cut -c 4-5 <<< $passtime`
+passsec=`cut -c 7-8 <<< $passtime`
+
+# Get the current system hour, minute and second in UTC
+hour=`date --utc +%H`
+min=`date --utc +%M`
+sec=`date --utc +%S`
+
+# Convert the pass time and system time to seconds
+pass_fi=$(( 10#$passhour * 3600 + 10#$passmin * 60 + 10#$passsec ))
+utc_fi=$(( 10#$hour * 3600 + 10#$min * 60 + 10#$sec))
+
+
+# Calculate the difference between the system time and the pass time
+# depending on whether the next pass is on the same day or on the next day.
+if [[ $pass_fi -lt $utc_fi ]]; then
+
+    # In case of the next day
+    utc_fi=$(( 86400 - $utc_fi ))
+    difr=$(( $pass_fi + $utc_fi ))
+
+else
+
+    # In case of the same day
+    difr=$(( $pass_fi - $utc_fi ))
+    
+fi
+
+
+# Making the difference positive
+if [[ $difr -lt 0 ]]; then
+    difr=$(( 0 - $difr ))
+fi
+
+
+
+# Getting the elevations of the upcoming pass from predict and parsing them into an array.
+elevs=`predict '-p' METEOR-M2 | cut -c 35-36 | sed 's/ //g'`
+readarray -t elev_array <<< $elevs
+
+# Getting the maximum elevation of the upcoming pass.
+IFS=$'\n'
+max_elev=`echo "${elev_array[*]}" | sort -nr | head -n1`
+
+
+# Getting the azimuths of the upcoming pass from predict and extracting the medium azimuth.
+az_lines=`predict -p METEOR-M2 | wc -l`
+az_lines=$(( $az_lines / 2 ))
+azimuth=`predict -p METEOR-M2 | sed ''$az_lines'q;d' | cut -c 39-41 | sed s/" "/""/g`
+
+
+
+# Writing the date, time, maximal elevation and medium azimuth into the log file passes.txt
+if [[ $logging -eq 1 ]]; then
+    echo $(date --utc +%Y-%m-%d) $passhour:$passmin:$passsec $max_elev $azimuth >> AutoLRPT.log
+fi
+
+
+
+# Wait until the pass begins
+sleep "$difr"s
+
+
+
+# Minimum elevation check
+if [[ $max_elev -ge $min_elev ]]; then
+    
+    
+    # Check if evening_rec is enabled/disabled and if it's evening.
+    if [[ $evening_rec -eq 0 ]] && [[ 10#$(date +"%H") -gt 15 ]]; then
+        echo ""
+
+    else
+
+        # Check if Autoflip is enabled and if it's evening
+        if [[ 10#$(date +"%H") -gt 15 ]] && [[ $autoflip -eq 1 ]]; then
+            mlrpt -i
+
+        else
+            mlrpt
+
+        fi
+
+    fi
+fi
+
+
+
+# Wait for 20 minutes until the next pass is being scheduled
+# (This will ensure that the next pass will be scheduled although no SDR has been connected)
+sleep 20m
+
+done
