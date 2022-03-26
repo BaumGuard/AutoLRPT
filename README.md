@@ -40,10 +40,5 @@ Now `mlrpt` should start automatially when Meteor M2 passes over. You don't need
 <br />
 If you want to stop AutoLRPT run `killall AutoLRPT`.
 ## Additional options
-**Reception in the evening**<br />
-All the settings are in the top part of the script `AutoLRPT`!<br /><br />
-LRPT images received in the evenings are usually darker than those received in the mornings. There will also be a lack of details in the images. If you want to disable the reception of images in the evening, you can change the value of `evening_rec` from 1 to 0 in the script `AutoLRPT`.<br />
-Also due to the opposite pass direction in the evenings, the images are upside down but AutoLRPT will flip them automatically. If you don't want that, you can disable this feature by setting `autoflip` to 0.
-<br />
-<br />
-**Minimum elevation**<br />You can set the minimum elevation by changing the value of the variable `min_elev` in `receive`.
+
+All the settings are located and explained in the top part of the script `AutoLRPT`!
