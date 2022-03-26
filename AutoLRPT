@@ -136,7 +136,7 @@ azimuth=`predict -p METEOR-M2 | sed ''$az_lines'q;d' | cut -c 39-41 | sed s/" "/
 
 
 
-# Writing the date, time, maximal elevation and medium azimuth into the log file passes.txt
+# Writing the date, time, maximum elevation and medium azimuth into the log file passes.txt
 if [[ $logging -eq 1 ]]; then
     echo $(date --utc +%Y-%m-%d) $passhour:$passmin:$passsec $max_elev $azimuth >> AutoLRPT.log
 fi
