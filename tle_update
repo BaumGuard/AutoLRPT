@@ -1,0 +1,72 @@
+#!/bin/bash
+
+## ---AUTOMATIC DOWNLOAD AND UPDATE OF TLE DATA--- ##
+# TLE data are necessary to determine the position of a satellite
+# at a given time. Because the orbits of satellites change slightly
+# over time it is important to update the TLE data regularly to
+# avoid miscalculations of pass times.
+
+# This script creates a file ~/.predict/predict.tle and downloads
+# the current TLE data of Meteor-M2 from this website:
+# https://www.n2yo.com/satellite/?s=40069
+
+# After having downloaded the data, it writes it into the file
+# mentioned above.
+
+
+## ---CONFIG PART--- ##
+
+## Automatically update the TLE data
+# If enabled, this script will update the TLE data in regular
+# intervals of 24 hours.
+# Possible values: true (automatic update), false (no automatic update) 
+tle_autoupd=false
+
+
+## --- OPERATIONAL PART - HANDLE WITH CAUTION! ---##
+
+# Test if ~/.predict/predict.tle is already present
+if [[ -z $(ls ~/.predict | grep METEOR-M2) ]]; then
+	touch ~/.predict/predict.tle
+fi
+
+# Test if the TLE data of Meteor M2 is already present in 
+# ~/.predict/predict.tle
+if [[ -z $(grep METEOR-M2 ~/.predict/predict.tle) ]]; then
+
+# Creating ~/.predict/predict.tle if it's not present
+	echo METEOR-M2 >> ~/.predict/predict.tle
+	echo 1 >> ~/.predict/predict.tle
+	echo 2 >> ~/.predict/predict.tle
+fi
+
+
+
+while
+
+# Downloading the TLE data and saving it into MeteorM2-TLE.html
+curl https://www.n2yo.com/satellite/?s=40069 > MeteorM2-TLE.html
+
+# Extract the two lines of the TLE data from the file
+line1=`sed '607q;d' MeteorM2-TLE.html`
+line2=`sed '608q;d' MeteorM2-TLE.html`
+
+# Getting the number of the line where METEOR-M2 appears
+linenumber=`grep -Fn 'METEOR-M2' ~/.predict/predict.tle | cut -d: -f1`
+
+# Replacing the old TLE data by the new
+linenumber=$(( 10#$linenumber + 1 ))
+sed -i "${linenumber}s/.*/$line1/" ~/.predict/predict.tle
+
+linenumber=$(( 10#$linenumber + 1 ))
+sed -i "${linenumber}s/.*/$line2/" ~/.predict/predict.tle
+
+
+# Wait for one day until the next update
+if [[ $tle_autoupd = true ]]; then
+sleep 24h
+fi
+
+# Check if the user wants automatic updating
+[[ $tle_autoupd = true ]]
+do $tle_autoupd; done
