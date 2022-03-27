@@ -7,11 +7,9 @@ AutoLRPT is a small program that allows you to receive LRPT images from Meteor M
 
 ## Presupposed setup
 AutoLRPT uses `predict` to get the pass times for Meteor M2 and automatically start ´mlrpt´ when Meteor-M2 passes over.<br />
-<br />
-**mlrpt**<br />
+### mlrpt<br />
 If you haven't installed `mlrpt` yet, you can download it from one of the links mentioned above. Both pages also provide good documentation about the compilation, installation and setup.<br />
-<br />
-**predict**<br />
+### predict<br />
 For most distributions, `predict` is available in the official respositories. In case you can not find it there, you can also download it from [here](https://www.qsl.net/kd2bd/predict.html)<br />
 <br />
 After having installed `predict`, you can navigate into the folder `.predict` and open `predict.qth`:<br />
@@ -22,7 +20,11 @@ Entering the longitude works differently in `predict` than you might expect. The
 If your longitude is negative when you are living in the west, you have to make it positive: `+ -> -`<br />
 If your longitude is positive when you are living in the east, you have to subtract it from 360°: `360°-x`<br />
 <br />
-Unfortunately, Meteor M2 isn't registered in `predict` by default. Consequently you have to add it yourself by retrieving the [TLE data](https://www.n2yo.com/satellite/?s=40069) from it and replace one satellite in `predict.tle` by the TLE data. Above the TLE data from Meteor M2 you have to add the line `METEOR-M2`.<br />
+Run the script `tle_update` to download the TLE data of Meteor M2.
+<br />
+`./tle_update`
+<br />
+<br />
 `predict` should now be able to work.<br />
 <br />
 ## Setup of AutoLRPT<br />
@@ -34,11 +36,17 @@ Clone AutoLRPT into your home directory:<br />
 Navigate into the directory of `AutoLRPT`...<br />
 `cd AutoLRPT`<br />
 ...and start the script`AutoLRPT` by running<br />
-`bash AutoLRPT`<br />
+`./ AutoLRPT &`<br />
 <br />
 Now `mlrpt` should start automatially when Meteor M2 passes over. You don't need to start `AutoLRPT` again manually afer the pass, since `AutoLRPT` will automatically schedule the next pass.<br />
 <br />
 If you want to stop AutoLRPT run `killall AutoLRPT`.
+<br />
+
+### Automatically update the TLE data<br />
+Change the value of the variable `tle_autoupd` in `tle_update` to `true` and start the script in the background:<br />
+`./tle_update &`
+
 ## Additional options
 
 All the settings are located and explained in the top part of the script `AutoLRPT`!
