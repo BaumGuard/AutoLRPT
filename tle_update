@@ -48,8 +48,8 @@ while
 curl https://www.n2yo.com/satellite/?s=40069 > MeteorM2-TLE.html
 
 # Extract the two lines of the TLE data from the file
-line1=`sed '607q;d' MeteorM2-TLE.html`
-line2=`sed '608q;d' MeteorM2-TLE.html`
+line1=`sed '607q;d' ~/AutoLRPT/MeteorM2-TLE.html`
+line2=`sed '608q;d' ~/AutoLRPT/MeteorM2-TLE.html`
 
 # Getting the number of the line where METEOR-M2 appears
 linenumber=`grep -Fn 'METEOR-M2' ~/.predict/predict.tle | cut -d: -f1`
