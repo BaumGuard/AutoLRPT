@@ -53,11 +53,8 @@ while true; do
 if [[ $upd_channels -eq 1 ]]; then
 
     # Download the status file if it's not present in AutoLRPT's folder
-    if [[ -z $(find -name Meteor-M-N2-and-N2-2-Satellite-Operational-Status) ]]; then
-        git clone https://github.com/happysat/Meteor-M-N2-and-N2-2-Satellite-Operational-Status
-    fi
+    [ -z $(find -name Meteor-M-N2-and-N2-2-Satellite-Operational-Status) ] && git clone https://github.com/happysat/Meteor-M-N2-and-N2-2-Satellite-Operational-Status
 
-    
     # Entering the folder of the status file and updating the file
     cd Meteor-M-N2-and-N2-2-Satellite-Operational-Status
     git pull 1>/dev/null
@@ -114,10 +111,7 @@ fi
 
 
 # Making the difference positive
-if [[ $difr -lt 0 ]]; then
-    difr=$(( 0 - $difr ))
-fi
-
+[ $difr -lt 0 ] && difr=$(( 0 - $difr ))
 
 
 # Getting the elevations of the upcoming pass from predict and parsing them into an array.
@@ -136,17 +130,12 @@ azimuth=`predict -p METEOR-M2 | sed ''$az_lines'q;d' | cut -c 39-41 | sed s/" "/
 
 
 
-# Writing the date, time, maximum elevation and medium azimuth into the log file passes.txt
-if [[ $logging -eq 1 ]]; then
-    echo $(date --utc +%Y-%m-%d) $passhour:$passmin:$passsec $max_elev $azimuth >> AutoLRPT.log
-fi
-
-
-
 # Wait until the pass begins
 sleep "$difr"s
 
-
+# Variable for the recording success/failure
+# NO_RECORDING (Recording disabled by user), SUCCESSFUL, ERROR
+rec_status="NO_RECORDING"
 
 # Minimum elevation check
 if [[ $max_elev -ge $min_elev ]]; then
@@ -161,15 +150,31 @@ if [[ $max_elev -ge $min_elev ]]; then
         # Check if Autoflip is enabled and if it's evening
         if [[ 10#$(date +"%H") -gt 15 ]] && [[ $autoflip -eq 1 ]]; then
             mlrpt -i
-
+                
+                if [ $? -eq 0 ]; then
+                    rec_status="SUCCESSFUL"
+                else
+                    rec_status="ERROR"
+                fi
+          
+          
         else
             mlrpt
+            
+                if [ $? -eq 0 ]; then
+                    rec_status="SUCCESSFUL"
+                else
+                    rec_status="ERROR"
+                fi
 
         fi
 
     fi
 fi
 
+
+# Writing the date, time, maximum elevation, medium azimuth and sucess/error into the log file AutoLRPT.log
+[ $logging -eq 1 ] && echo $(date --utc +%Y-%m-%d) $passhour:$passmin:$passsec $max_elev $azimuth >> AutoLRPT.log
 
 
 # Wait for 20 minutes until the next pass is being scheduled
