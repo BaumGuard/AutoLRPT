@@ -174,7 +174,7 @@ fi
 
 
 # Writing the date, time, maximum elevation, medium azimuth and sucess/error into the log file AutoLRPT.log
-[ $logging -eq 1 ] && echo $(date --utc +%Y-%m-%d) $passhour:$passmin:$passsec $max_elev $azimuth >> AutoLRPT.log
+[ $logging -eq 1 ] && echo $(date --utc +%Y-%m-%d) $passhour:$passmin:$passsec $max_elev $azimuth $rec_status >> AutoLRPT.log
 
 
 # Wait for 20 minutes until the next pass is being scheduled
