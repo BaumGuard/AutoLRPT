@@ -5,6 +5,9 @@ AutoLRPT is a small program that allows you to receive LRPT images from Meteor M
 - `mlrpt`: http://5b4az.org/ / https://github.com/dvdesolve/mlrpt<br />
 - `predict`<br />
 
+## Video tutorial
+Watch my [YouTube tutorial](https://www.youtube.com/watch?v=QXLyTNqWK6M) on how to setup and configure AutoLRPT.
+
 ## Presupposed setup
 AutoLRPT uses `predict` to get the pass times for Meteor M2 and automatically start `mlrpt` when Meteor-M2 passes over.<br />
 ### mlrpt<br />
@@ -13,7 +16,7 @@ If you haven't installed `mlrpt` yet, you can download it from one of the links 
 For most distributions, `predict` is available in the official respositories. In case you can not find it there, you can also download it from [here](https://www.qsl.net/kd2bd/predict.html)<br />
 
 
-## Setup of AutoLRPT<br />
+## Setup of AutoLRPT
 Clone AutoLRPT into your home directory:<br />
 `cd`<br />
 `git clone https://github.com/BaumGuard/AutoLRPT`<br />
