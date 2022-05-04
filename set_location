@@ -26,6 +26,7 @@ lon=`awk "BEGIN {print 360 - $lon}"`
 
 fi
 
+mkdir ~/.predict
 
 #Writing the data to ~/.predict/predict.qth
 
