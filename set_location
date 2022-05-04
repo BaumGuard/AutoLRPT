@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Asking the user for the name/callsign, latitude, longitude and altitude (Required by predict)
 echo "This  script will set your coordinates in predict's config file ~/.predict/predict.qth"
 echo ""
 
@@ -16,6 +17,7 @@ echo "Enter your altitude (only a number):"
 read height
 
 
+# Converting the longitude into the format of predict
 if [[ $lon = *"-"* ]]; then
 lon=`awk "BEGIN {print 0 - $lon}"`
 
@@ -25,6 +27,7 @@ lon=`awk "BEGIN {print 360 - $lon}"`
 fi
 
 
+#Writing the data to ~/.predict/predict.qth
 
 echo "" > ~/.predict/predict.qth
 
