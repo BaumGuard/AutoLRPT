@@ -1,0 +1,34 @@
+#!/bin/bash
+
+echo "This  script will set your coordinates in predict's config file ~/.predict/predict.qth"
+echo ""
+
+echo "Enter your callsign or name:"
+read name
+
+echo "Enter your latitude as a decimal number (e. g. 52.8962):"
+read lat
+
+echo "Enter your longitude as a decimal number (e. g. 30.4503):"
+read lon
+
+echo "Enter your altitude (only a number):"
+read height
+
+
+if [[ $lon = *"-"* ]]; then
+lon=`awk "BEGIN {print 0 - $lon}"`
+
+else
+lon=`awk "BEGIN {print 360 - $lon}"`
+
+fi
+
+
+
+echo "" > ~/.predict/predict.qth
+
+echo $name >> ~/.predict/predict.qth
+echo " $lat" >> ~/.predict/predict.qth
+echo " $lon" >> ~/.predict/predict.qth
+echo $height >> ~/.predict/predict.qth
