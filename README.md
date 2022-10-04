@@ -37,7 +37,7 @@ Then execute the script:<br />
 `./tle_update &`
 
 ## Usage
-Start `AutoLRPT`:<br />
+Start `AutoLRPT` **from inside its directory**:<br />
 `./ AutoLRPT &`<br />
 The `&` will execute the script in the background.
 <br />
