@@ -61,11 +61,11 @@ if [[ $upd_channels -eq 1 ]]; then
 
     
     # Updating the APID channel in mlrpt's config file ~/mlrpt/default.cfg
-    if [[ $(sed '31q;d' README.md)=*"On"* ]]; then
-        sed -i '123s/.*/66/' ~/mlrpt/default.cfg
+    if [[ $(sed '40q;d' README.md) == *"On"* ]]; then
+        sed -i '123s/.*/68/' ~/mlrpt/default.cfg
 
     else
-        sed -i '123s/.*/68/' ~/mlrpt/default.cfg
+        sed -i '123s/.*/66/' ~/mlrpt/default.cfg
 
     fi
     
