@@ -25,7 +25,7 @@ Enter the folder of AutoLRPT:<br />
 `cd AutoLRPT`<br />
 <br />
 Execute the script `set_location` and enter your name/callsign, latitude, longitude and altitude:<br />
-`./set_altitude`<br />
+`./set_location`<br />
 
 
 ### Updating the TLE data
