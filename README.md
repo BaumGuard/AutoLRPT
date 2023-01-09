@@ -1,5 +1,5 @@
 # AutoLRPT
-AutoLRPT is a small program that allows you to receive LRPT images from Meteor M2 automatically by using mlrpt.<br />
+AutoLRPT is a small Bash script that allows you to receive LRPT images from Meteor M2 automatically by using mlrpt. The script only runs on **Linux** and can e. g. be used on a Raspberry Pi.<br />
 
 ## Dependencies
 - `mlrpt`: http://5b4az.org/ / https://github.com/dvdesolve/mlrpt<br />
@@ -38,7 +38,7 @@ Then execute the script:<br />
 
 ## Usage
 Start `AutoLRPT` **from inside its directory**:<br />
-`./ AutoLRPT &`<br />
+`./AutoLRPT &`<br />
 The `&` will execute the script in the background.
 <br />
 <br />
