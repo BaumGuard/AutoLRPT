@@ -26,10 +26,11 @@ lon=`awk "BEGIN {print 360 - $lon}"`
 
 fi
 
+# Look if the folder ~/.predict is already present in the home directory
+# If not, create it
 [[ -z $(ls -a ~ | grep .predict) ]] && mkdir ~/.predict
 
-#Writing the data to ~/.predict/predict.qth
-
+# Writing the data to ~/.predict/predict.qth
 echo $name > ~/.predict/predict.qth
 echo " $lat" >> ~/.predict/predict.qth
 echo " $lon" >> ~/.predict/predict.qth
