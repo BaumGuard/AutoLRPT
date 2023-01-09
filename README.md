@@ -44,6 +44,11 @@ The `&` will execute the script in the background.
 <br />
 Now `mlrpt` should start automatially when Meteor M2 passes over. You don't need to start `AutoLRPT` again manually afer the pass, since `AutoLRPT` will automatically schedule the next pass.<br />
 <br />
+**Be sure to exit the console on which you have started `AutoLRPT` by running**<br />
+`exit`
+<br />**Otherways `AutoLRPT` will be stopped!**
+<br />
+
 If you want to stop AutoLRPT<br />
 `killall AutoLRPT`
 
