@@ -45,6 +45,14 @@
 ## --- OPERATIONAL PART --- ##
 ## Handle with caution!
 
+# Get the timestamp of the upcoming/current pass and the current timestamp
+pass_ts=`predict -p METEOR-M2 | sed 's/ .*//' | head -n1`
+cur_ts=`date +%s`
+
+# If the pass's timestamp is less than the current timestamp, wait for 20 minutes before progressing.
+# This ensures that if AutoLRPT is being started during a pass, it will get the time of the upcoming pass
+# otherways it will wait until the next day.
+[[ $pass_ts -le $cur_ts ]] && sleep 20m
 
 # Infinite loop that will always schedule the next pass after the recent one is over
 while true; do
