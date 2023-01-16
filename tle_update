@@ -47,6 +47,7 @@ while
 # Downloading the TLE data and saving it into MeteorM2-TLE.html
 curl https://www.n2yo.com/satellite/?s=40069 > MeteorM2-TLE.html
 
+# Getting the line number where the TLE data starts
 tle_start=`grep -n 40069U MeteorM2-TLE.html | sed 's/:.*//'`
 
 # Extract the two lines of the TLE data from the file
