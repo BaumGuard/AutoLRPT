@@ -46,7 +46,7 @@
 ## Handle with caution!
 
 # Get the timestamp of the upcoming/current pass and the current timestamp
-pass_ts=`predict -p METEOR-M2 | sed 's/ .*//' | head -n1`
+pass_ts=`predict -p METEOR-M2 | awk '{print $1}' | head -n1`
 cur_ts=`date +%s`
 
 # If the pass's timestamp is less than the current timestamp, wait for 20 minutes before progressing.
@@ -85,7 +85,7 @@ fi
 
 
 # Get the UTC time of the upcoming pass from predict
-passtime=`predict '-p' METEOR-M2 | grep -o -m1 [0-2][0-9]:[0-5][0-9]:[0-5][0-9]`
+passtime=`predict '-p' METEOR-M2 | awk '{print $4}' | head -n1`
 
 # Extracting the hour, minute and second of the upcoming pass
 passhour=`cut -c 1-2 <<< $passtime`
@@ -123,7 +123,7 @@ fi
 
 
 # Getting the elevations of the upcoming pass from predict and parsing them into an array.
-elevs=`predict '-p' METEOR-M2 | cut -c 35-36 | sed 's/ //g'`
+elevs=`predict '-p' METEOR-M2 | awk '{print $5}'`
 readarray -t elev_array <<< $elevs
 
 # Getting the maximum elevation of the upcoming pass.
@@ -132,57 +132,82 @@ max_elev=`echo "${elev_array[*]}" | sort -nr | head -n1`
 
 
 # Getting the azimuths of the upcoming pass from predict and extracting the medium azimuth.
-az_lines=`predict -p METEOR-M2 | wc -l`
-az_lines=$(( $az_lines / 2 ))
-azimuth=`predict -p METEOR-M2 | sed ''$az_lines'q;d' | cut -c 39-41 | sed s/" "/""/g`
+readarray -t azimuth <<< $(predict -p METEOR-M2 | awk '{print $6}')
+azimuth=${azimuth[ $(( ${#azimuth[@]} / 2 )) ]}
 
 
 
 # Wait until the pass begins
 sleep "$difr"s
 
+
 # Variable for the recording success/failure
-# NO_RECORDING (Recording disabled by user), SUCCESSFUL, ERROR
-rec_status="NO_RECORDING"
+    # IMAGE RECORDED    -> If an image was received and saved (successful execution of mlrpt)
+    # NO_IMAGE_RECORDED -> If no image was received (successful execution of mlrpt)
+    # NO_RECORDING      -> If the user disabled the recording (min_elev, evening_rec) under certain circumstances (no execution of mlrpt)
+    # NO_SDR_CONNECTED  -> If mlrpt stops because no SDR was connected
+    # ERROR             -> Any other errors
+rec_status=""
+
+# Variable to save the error code after executing mlrpt
+# 0 -> successful, >0 -> not successful
+success=1
 
 # Minimum elevation check
 if [[ $max_elev -ge $min_elev ]]; then
     
     
     # Check if evening_rec is enabled/disabled and if it's evening.
-    if [[ $evening_rec -eq 0 ]] && [[ 10#$(date +"%H") -gt 15 ]]; then
-        echo ""
-
-    else
+    if [[ $evening_rec -eq 1 ]] || [[ 10#$(date +"%H") -le 15 ]]; then
 
         # Check if Autoflip is enabled and if it's evening
         if [[ 10#$(date +"%H") -gt 15 ]] && [[ $autoflip -eq 1 ]]; then
-            mlrpt -i
-                
-                if [ $? -eq 0 ]; then
-                    rec_status="SUCCESSFUL"
-                else
-                    rec_status="ERROR"
-                fi
-          
-          
+            mlrpt -i > ~/AutoLRPT/mlrpt.log 2>&1
+            success=$?
+
         else
-            mlrpt
-            
-                if [ $? -eq 0 ]; then
-                    rec_status="SUCCESSFUL"
-                else
-                    rec_status="ERROR"
-                fi
+            mlrpt > ~/AutoLRPT/mlrpt.log 2>&1
+            success=$?
 
         fi
 
+    else
+        rec_status="NO_RECORDING"
     fi
+
+else
+    rec_status="NO_RECORDING"
+fi
+
+# Generating the status
+if [[ $success -eq 0 ]] && [[ $rec_status != "NO_RECORDING" ]]; then
+
+	if [[ -z $(grep "Saving Image" ~/AutoLRPT/mlrpt.log) ]]; then
+		rec_status="NO_IMAGE_RECORDED"
+	else
+		rec_status="IMAGE_RECORDED"
+	fi
+fi
+
+if [[ $success -ne 0 ]] && [[ $rec_status != "NO_RECORDING" ]]; then
+
+	if [[ -z $(grep "Failed to open RTL-SDR device" ~/AutoLRPT/mlrpt.log) ]]; then
+		rec_status="ERROR"
+	else
+		rec_status="NO_SDR_CONNECTED"
+	fi
+
 fi
 
 
+
 # Writing the date, time, maximum elevation, medium azimuth and sucess/error into the log file AutoLRPT.log
-[ $logging -eq 1 ] && echo $(date --utc +%Y-%m-%d) $passhour:$passmin:$passsec $max_elev $azimuth $rec_status >> AutoLRPT.log
+[ $logging -eq 1 ] && echo $(date --utc +%Y-%m-%d) $passhour:$passmin:$passsec $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
+
+
+# Moving the images to the webserver's image folder
+# The webserver's image folder (in the case below /var/www/html/images) must have writing permissions for that!
+#[[ -z $(ls ~/mlrpt/images) ]] && mv ~/mlrpt/images/* /var/www/html/images
 
 
 # Wait for 20 minutes until the next pass is being scheduled
