@@ -1,6 +1,10 @@
 # AutoLRPT
 AutoLRPT is a small Bash script that allows you to receive LRPT images from Meteor M2 automatically by using mlrpt. The script only runs on **Linux** and can e. g. be used on a Raspberry Pi.<br />
 
+## Warning
+**Since the 24th December 2022 the Russian weather satellite Meteor M2, for which this script was written, doesn't transmit LRPT images anymore. The Russian space agency Roscosmos plans to launch a successor called Meteor M2-3 but the launch was postponed multiple times in the last few years.** <br />
+**I will update this script to make it work with the new satellite when the satellite has been launched and when the decoder as well as the TLE data are available.**
+
 ## Dependencies
 - `mlrpt`: http://5b4az.org/ / https://github.com/dvdesolve/mlrpt<br />
 - `predict`<br />
