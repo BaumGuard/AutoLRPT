@@ -7,44 +7,44 @@
         # passes will often have a worse quality.
         # Possible values: 0 - 90
         min_elev=0
-        
+
     ## Record images in the evening
         # Due to a lack of solar illumination, the images will be darker
         # in the evenings than in the mornings.
         # So, if you don't want to record evening passes, set "evening_rec" to 0.
         evening_rec=1
-        
+
     ## Autoflip images in the evening
         # Because of the opposite pass direction in the evenings (South to North)
         # the images received in the evenings will be upside down by default, but
         # they can be automatically rotated.
         # If you don't want that, set autoflip to 0
         autoflip=1
-        
+
     ## Update color channels automatically
-        # Throughout the year, one of Meteor M2's APID channels will switch between
-        # 66 and 68. If the color channel isn't updated, the images will often be 
+        # Throughout the year, one of Meteor M2 3's APID channels will switch between
+        # 66 and 68. If the color channel isn't updated, the images will often be
         # quite dark.
-   
+
         # AutoLRPT downloads the currently active channels from here:
-        # https://github.com/happysat/Meteor-M-N2-and-N2-2-Satellite-Operational-Status
-    
+        # https://github.com/happysat/Meteor-M-N-2-3-Satellite-Operational-Status
+
         # Then it will update the channel in mlrpt's config file ~/mlrpt/default.cfg
         upd_channels=1
-        
+
     ## Logging
         # If you want AutoLRPT to log the passes in AutoLRPT.log, set "logging" to 1
         logging=1
 
-        
 
-        
-        
+
+
+
 ## --- OPERATIONAL PART --- ##
 ## Handle with caution!
 
 # Get the timestamp of the upcoming/current pass and the current timestamp
-pass_ts=`predict -p METEOR-M2 | awk '{print $1}' | head -n1`
+pass_ts=`predict -p METEOR-M2-3 | awk '{print $1}' | head -n1`
 cur_ts=`date +%s`
 
 # If the pass's timestamp is less than the current timestamp, wait for 20 minutes before progressing.
@@ -60,13 +60,13 @@ while true; do
 	if [[ $upd_channels -eq 1 ]]; then
 
 		# Download the status file if it's not present in AutoLRPT's folder
-		[ -z $(find -name Meteor-M-N2-and-N2-2-Satellite-Operational-Status) ] && git clone https://github.com/happysat/Meteor-M-N2-and-N2-2-Satellite-Operational-Status
+		[ -z $(find -name Meteor-M-N-2-3-Satellite-Operational-Status) ] && git clone https://github.com/happysat/Meteor-M-N-2-3-Satellite-Operational-Status
 
 		# Entering the folder of the status file and updating the file
-		cd Meteor-M-N2-and-N2-2-Satellite-Operational-Status
+		cd Meteor-M-N-2-3-Satellite-Operational-Status
 		git pull 1>/dev/null
 
-		
+
 		# Updating the APID channel in mlrpt's config file ~/mlrpt/default.cfg
 		if [[ $(sed '40q;d' README.md) == *"On"* ]]; then
 			sed -i '123s/.*/68/' ~/mlrpt/default.cfg
@@ -75,7 +75,7 @@ while true; do
 			sed -i '123s/.*/66/' ~/mlrpt/default.cfg
 
 		fi
-		
+
 		# Return to ~/AutoLRPT
 		cd ..
 
@@ -84,47 +84,47 @@ while true; do
 
 
 	# Get the UTC time of the upcoming pass from predict
-	passtime=`predict '-p' METEOR-M2 | awk '{print $4}' | head -n1`
+	passtime=`predict '-p' METEOR-M2-3 | awk '{print $4}' | head -n1`
 
 	# Calculate the difference between the system time and the pass time
 	difr=$(( $pass_ts - $cur_ts ))
 
 	# Getting the elevations of the upcoming pass from predict and parsing them into an array.
-	elevs=`predict '-p' METEOR-M2 | awk '{print $5}'`
+	elevs=`predict '-p' METEOR-M2-3 | awk '{print $5}'`
 	readarray -t elev_array <<< $elevs
-	
+
 	# Getting the maximum elevation of the upcoming pass.
 	IFS=$'\n'
 	max_elev=`echo "${elev_array[*]}" | sort -nr | head -n1`
-	
+
 	# Getting the azimuths of the upcoming pass from predict and extracting the medium azimuth.
-	readarray -t azimuth <<< $(predict -p METEOR-M2 | awk '{print $6}')
+	readarray -t azimuth <<< $(predict -p METEOR-M2-3 | awk '{print $6}')
 	azimuth=${azimuth[ $(( ${#azimuth[@]} / 2 )) ]}
-	
-	
+
+
 	# Wait until the pass begins
 	sleep "$difr"s
-	
-	
+
+
 	# Variable for the recording success/failure
 		# IMAGE RECORDED    -> If an image was received and saved (successful execution of mlrpt)
 		# NO_IMAGE_RECORDED -> If no image was received (successful execution of mlrpt)
 		# NO_RECORDING      -> If the user disabled the recording (min_elev, evening_rec) under certain circumstances (no execution of mlrpt)
-		# NO_SDR_CONNECTED  -> If mlrpt stops because no SDR was connected
+		# NO_SDR_CONNECTED  -> If mlrpt stops because no SDR was connected (unsuccessful execution of mlrpt)
 		# ERROR             -> Any other errors
 	rec_status=""
-	
+
 	# Variable to save the error code after executing mlrpt
 	# 0 -> successful, >0 -> not successful
 	success=1
-	
-	
+
+
 	# Minimum elevation check
 	if [[ $max_elev -ge $min_elev ]]; then
-		
+
 		# Check if evening_rec is enabled/disabled and if it's evening.
 		if [[ $evening_rec -eq 1 ]] || [[ 10#$(date +"%H") -le 15 ]]; then
-			
+
 			# Check if Autoflip is enabled and if it's evening
 			if [[ 10#$(date +"%H") -gt 15 ]] && [[ $autoflip -eq 1 ]]; then
 				mlrpt -i > ~/AutoLRPT/mlrpt.log 2>&1
@@ -139,8 +139,8 @@ while true; do
 	else
 		rec_status="NO_RECORDING"
 	fi
-	
-	
+
+
 	# Generating the status
 	if [[ $success -eq 0 ]] && [[ $rec_status != "NO_RECORDING" ]]; then
 		if [[ -z $(grep "Saving Image" ~/AutoLRPT/mlrpt.log) ]]; then
@@ -149,7 +149,7 @@ while true; do
 			rec_status="IMAGE_RECORDED"
 		fi
 	fi
-	
+
 	if [[ $success -ne 0 ]] && [[ $rec_status != "NO_RECORDING" ]]; then
 		if [[ -z $(grep "Failed to open RTL-SDR device" ~/AutoLRPT/mlrpt.log) ]]; then
 			rec_status="ERROR"
@@ -157,19 +157,19 @@ while true; do
 			rec_status="NO_SDR_CONNECTED"
 		fi
 	fi
-	
-	
+
+
 	# Writing the date, time, maximum elevation, medium azimuth and sucess/error into the log file AutoLRPT.log
 	[ $logging -eq 1 ] && echo $(date --utc +%Y-%m-%d) $passtime $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
-	
-	
+
+
 	# Moving the images to the webserver's image folder
 	# The webserver's image folder (in the case below /var/www/html/images) must have writing permissions for that!
 	#[[ -z $(ls ~/mlrpt/images) ]] && mv ~/mlrpt/images/* /var/www/html/images
-	
-	
+
+
 	# Wait for 20 minutes until the next pass is being scheduled
 	# (This will ensure that the next pass will be scheduled although no SDR has been connected)
 	sleep 20m
-	
+
 done
