@@ -4,7 +4,7 @@ AutoLRPT is a small Bash script that allows you to receive LRPT images from **Me
 ## Dependencies
 * `mlrpt`
   * Download **mlrpt** from [5B4AZ.com](http://5b4az.org)
-  * Downlaod **mlrpt** from [GitHub.com](https://github.com/dvdesolve/mlrpt)
+  * Downlaod **mlrpt** from [GitHub.org](https://github.com/dvdesolve/mlrpt)
 * `predict`
 
 ## Video tutorial
