@@ -81,11 +81,15 @@ while true; do
 
 	fi
 
+	# Get the timestamp of the upcoming/current pass and the current timestamp
 	pass_ts=`predict -p METEOR-M2-3 | awk '{print $1}' | head -n1`
 	cur_ts=`date +%s`
 
+	# Writing the date and time of the upcomming path into the file next_pass
+	echo $(date -d @$pass_ts --utc "+%Y-%m-%d %H:%M:%S") > next_pass
+
 	# Get the UTC time of the upcoming pass from predict
-	passtime=`date @$pass_ts +%H:%M:%S`
+	passtime=`date @$pass_ts --utc +%H:%M:%S`
 
 	# Calculate the difference between the system time and the pass time
 	difr=$(( $pass_ts - $cur_ts ))
