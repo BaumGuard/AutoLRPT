@@ -81,10 +81,11 @@ while true; do
 
 	fi
 
-
+	pass_ts=`predict -p METEOR-M2-3 | awk '{print $1}' | head -n1`
+	cur_ts=`date +%s`
 
 	# Get the UTC time of the upcoming pass from predict
-	passtime=`predict '-p' METEOR-M2-3 | awk '{print $4}' | head -n1`
+	passtime=`date @$pass_ts +%H:%M:%S`
 
 	# Calculate the difference between the system time and the pass time
 	difr=$(( $pass_ts - $cur_ts ))
