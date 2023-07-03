@@ -89,7 +89,7 @@ while true; do
 	echo $(date -d @$pass_ts --utc "+%Y-%m-%d %H:%M:%S") > next_pass
 
 	# Get the UTC time of the upcoming pass from predict
-	passtime=`date @$pass_ts --utc +%H:%M:%S`
+	passtime=`date -d @$pass_ts --utc "+%H:%M:%S"`
 
 	# Calculate the difference between the system time and the pass time
 	difr=$(( $pass_ts - $cur_ts ))
