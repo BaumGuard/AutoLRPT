@@ -170,7 +170,7 @@ while true; do
 
 	# Moving the images to the webserver's image folder
 	# The webserver's image folder (in the case below /var/www/html/images) must have writing permissions for that!
-	#[[ -z $(ls ~/mlrpt/images) ]] && mv ~/mlrpt/images/* /var/www/html/images
+	#[[ $(ls ~/mlrpt/images) != "" ]] && mv ~/mlrpt/images/* /var/www/html/images
 
 
 	# Wait for 20 minutes until the next pass is being scheduled
