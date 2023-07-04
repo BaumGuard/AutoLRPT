@@ -7,9 +7,6 @@ AutoLRPT is a small Bash script that allows you to receive LRPT images from **Me
   * Downlaod **mlrpt** from [GitHub.org](https://github.com/dvdesolve/mlrpt)
 * `predict`
 
-## Video tutorial
-Watch my [YouTube tutorial](https://www.youtube.com/watch?v=QXLyTNqWK6M) on how to setup and configure AutoLRPT.
-
 ## Presupposed setup
 AutoLRPT uses `predict` to get the pass times for Meteor M2 3 and automatically start `mlrpt` when Meteor M2 3 passes over.<br />
 ### mlrpt<br />
