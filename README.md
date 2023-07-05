@@ -110,7 +110,7 @@ killall AutoLRPT
 
 
 ## Additional options
-You can change the following settings in `AutoLRPT` according to your needs:
+You can change the following settings in `AutoLRPT.cfg` according to your needs:
 * **Minimum elevation**<br />
   Only record passes that have at least the given elevation.
   * Variable: `min_elev`
