@@ -124,8 +124,23 @@ while true; do
 	fi
 
 
-	# Writing the date, time, maximum elevation, medium azimuth and sucess/error into the log file AutoLRPT.log
-	[ $logging -eq 1 ] && echo $(date --utc +%Y-%m-%d) $passtime $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
+        # Creating spaces for a flush log output
+        if [[ $max_elev -lt 10 ]]; then
+                elev_ph=" "
+        fi
+
+
+        if [[ $azimuth -lt 10 ]]; then
+                az_ph="  "
+        elif [[ $azimuth -ge 10 ]] && [[ $azimuth -lt 100 ]]; then
+                az_ph=" "
+        else
+                az_ph=""
+        fi
+
+
+        # Writing the date, time, maximum elevation, medium azimuth and sucess/error into the log file AutoLRPT.log
+        [ $logging -eq 1 ] && echo $(date --utc +%Y-%m-%d) $passtime $elev_ph$max_elev $az_ph$azimuth $rec_status >> ~/AutoLRPT/AutoLRPT$
 
 
 	# Moving the images to the webserver's image folder
