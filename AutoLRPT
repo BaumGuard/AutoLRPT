@@ -140,7 +140,7 @@ while true; do
 
 
         # Writing the date, time, maximum elevation, medium azimuth and sucess/error into the log file AutoLRPT.log
-        [ $logging -eq 1 ] && echo $(date --utc +%Y-%m-%d) $passtime $elev_ph$max_elev $az_ph$azimuth $rec_status >> ~/AutoLRPT/AutoLRPT$
+        [ $logging -eq 1 ] && echo $(date --utc +%Y-%m-%d) $passtime "$elev_ph"$max_elev "$az_ph"$azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
 
 
 	# Moving the images to the webserver's image folder
