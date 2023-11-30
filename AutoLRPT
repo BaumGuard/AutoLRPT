@@ -19,17 +19,9 @@ while true; do
 	# Automatic update of APID channels
 	if [[ $upd_channels -eq 1 ]]; then
 
-		# Download the status file if it's not present in AutoLRPT's folder
-		[ -z $(find -name Meteor-M-N-2-3-Satellite-Operational-Status) ] && git clone https://github.com/happysat/Meteor-M-N-2-3-Satellite-Operational-Status
-
-		# Entering the folder of the status file and updating the file
-		cd Meteor-M-N-2-3-Satellite-Operational-Status
-		git pull 1>/dev/null
-
-
 		# Updating the APID channel in mlrpt's config file ~/mlrpt/default.cfg
-		if [[ $(sed '40q;d' README.md) == *"On"* ]]; then
-			sed -i '123s/.*/68/' ~/mlrpt/default.cfg
+		if [[ $(curl --connect-timeout 10 https://usradioguy.com/meteor-satellite/ 2>/dev/null | grep -E -o '((>ON<)|(>OFF<))' | sed 's/<//g' | sed 's/>//g' | sed '4q;d') == "ON" ]]; then
+			sed -i '123s/.*/67/' ~/mlrpt/default.cfg
 
 		else
 			sed -i '123s/.*/66/' ~/mlrpt/default.cfg
@@ -124,23 +116,8 @@ while true; do
 	fi
 
 
-        # Creating spaces for a flush log output
-        if [[ $max_elev -lt 10 ]]; then
-                elev_ph=" "
-        fi
-
-
-        if [[ $azimuth -lt 10 ]]; then
-                az_ph="  "
-        elif [[ $azimuth -ge 10 ]] && [[ $azimuth -lt 100 ]]; then
-                az_ph=" "
-        else
-                az_ph=""
-        fi
-
-
-        # Writing the date, time, maximum elevation, medium azimuth and sucess/error into the log file AutoLRPT.log
-        [ $logging -eq 1 ] && echo $(date --utc +%Y-%m-%d) $passtime "$elev_ph"$max_elev "$az_ph"$azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
+        # Writing the date, time, maximum elevation, medium azimuth and success/error into the log file AutoLRPT.log
+        [ $logging -eq 1 ] && printf "%s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) $passtime $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
 
 
 	# Moving the images to the webserver's image folder
