@@ -2,13 +2,13 @@
 
 ## ---AUTOMATIC DOWNLOAD AND UPDATE OF TLE DATA--- ##
 # TLE data are necessary to determine the position of a satellite
-# at a given time. Because the orbits of satellites change slightly
+# at a given time. Since the orbits of satellites change slightly
 # over time it is important to update the TLE data regularly to
 # avoid miscalculations of pass times.
 
 # This script creates a file ~/.predict/predict.tle and downloads
-# the current TLE data of Meteor-M2 from this website:
-# https://www.n2yo.com/satellite/?s=57166
+# the current TLE data of Meteor-M2 3 from this website:
+# https://celestrak.org/NORAD/elements/gp.php?CATNR=57166&FORMAT=tle
 
 # After having downloaded the data, it writes it into the file
 # mentioned above.
@@ -26,16 +26,16 @@ tle_autoupd=false
 ## --- OPERATIONAL PART - HANDLE WITH CAUTION! ---##
 
 # Test if ~/.predict/predict.tle is already present
-if [[ -z $(ls ~/.predict | grep METEOR-M2-3) ]]; then
+if [[ -z $(ls ~/.predict | grep "METEOR-M2 3") ]]; then
         touch ~/.predict/predict.tle
 fi
 
 # Test if the TLE data of Meteor M2 is already present in
 # ~/.predict/predict.tle
-if [[ -z $(grep METEOR-M2-3 ~/.predict/predict.tle) ]]; then
+if [[ -z $(grep "METEOR-M2 3" ~/.predict/predict.tle) ]]; then
 
 # Creating ~/.predict/predict.tle if it's not present
-        echo METEOR-M2-3 >> ~/.predict/predict.tle
+        echo "METEOR-M2 3" >> ~/.predict/predict.tle
         echo 1 >> ~/.predict/predict.tle
         echo 2 >> ~/.predict/predict.tle
 fi
@@ -44,22 +44,15 @@ fi
 
 while
 
-# Downloading the TLE data and saving it into MeteorM2-TLE.html
-curl https://www.n2yo.com/satellite/?s=57166 > Meteor-M2-3-TLE.html
-
-# Getting the line number where the TLE data starts
-tle_start=`grep -n 57166U Meteor-M2-3-TLE.html | sed 's/:.*//'`
+# Downloading the TLE data and saving it into MeteorM2-TLE.tle
+curl "https://celestrak.org/NORAD/elements/gp.php?CATNR=57166&FORMAT=tle" > Meteor-M2-3-TLE.tle
 
 # Extract the two lines of the TLE data from the file
-line1=`sed ''$tle_start'q;d' ~/AutoLRPT/Meteor-M2-3-TLE.html`
+line1=`sed '2q;d' ~/AutoLRPT/Meteor-M2-3-TLE.tle`
+line2=`sed '3q;d' ~/AutoLRPT/Meteor-M2-3-TLE.tle`
 
-# Line number of second TLE line
-tle_start=$(( $tle_start + 1 ))
-
-line2=`sed ''$tle_start'q;d' ~/AutoLRPT/Meteor-M2-3-TLE.html`
-
-# Getting the number of the line where METEOR-M2 appears
-linenumber=`grep -Fn 'METEOR-M2-3' ~/.predict/predict.tle | cut -d: -f1`
+# Getting the number of the line where METEOR-M2 3 appears
+linenumber=`grep -Fn 'METEOR-M2 3' ~/.predict/predict.tle | cut -d: -f1`
 
 # Replacing the old TLE data by the new
 linenumber=$(( 10#$linenumber + 1 ))
