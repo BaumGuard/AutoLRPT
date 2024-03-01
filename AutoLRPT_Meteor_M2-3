@@ -3,8 +3,11 @@
 # Including AutoLRPT's config file
 . AutoLRPT.cfg
 
+# Name of the satellite
+satname="METEOR-M2-3"
+
 # Get the timestamp of the upcoming/current pass and the current timestamp
-pass_ts=`predict -p METEOR-M2-3 | awk '{print $1}' | head -n1`
+pass_ts=`predict -p $satname | awk '{print $1}' | head -n1`
 cur_ts=`date +%s`
 
 # If the pass's timestamp is less than the current timestamp, wait for 20 minutes before progressing.
@@ -34,7 +37,7 @@ while true; do
 	fi
 
 	# Get the timestamp of the upcoming/current pass and the current timestamp
-	pass_ts=`predict -p METEOR-M2-3 | awk '{print $1}' | head -n1`
+	pass_ts=`predict -p $satname | awk '{print $1}' | head -n1`
 	cur_ts=`date +%s`
 
 	# Writing the date and time of the upcomming path into the file next_pass
@@ -47,7 +50,7 @@ while true; do
 	difr=$(( $pass_ts - $cur_ts ))
 
 	# Getting the elevations of the upcoming pass from predict and parsing them into an array.
-	elevs=`predict '-p' METEOR-M2-3 | awk '{print $5}'`
+	elevs=`predict '-p' $satname | awk '{print $5}'`
 	readarray -t elev_array <<< $elevs
 
 	# Getting the maximum elevation of the upcoming pass.
@@ -55,7 +58,7 @@ while true; do
 	max_elev=`echo "${elev_array[*]}" | sort -nr | head -n1`
 
 	# Getting the azimuths of the upcoming pass from predict and extracting the medium azimuth.
-	readarray -t azimuth <<< $(predict -p METEOR-M2-3 | awk '{print $6}')
+	readarray -t azimuth <<< $(predict -p $satname | awk '{print $6}')
 	azimuth=${azimuth[ $(( ${#azimuth[@]} / 2 )) ]}
 
 
@@ -117,7 +120,7 @@ while true; do
 
 
         # Writing the date, time, maximum elevation, medium azimuth and success/error into the log file AutoLRPT.log
-        [ $logging -eq 1 ] && printf "%s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) $passtime $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
+        [ $logging -eq 1 ] && printf "%s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) $satname $passtime $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
 
 
 	# Moving the images to the webserver's image folder
