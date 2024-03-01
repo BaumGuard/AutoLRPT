@@ -1,5 +1,5 @@
 # AutoLRPT
-AutoLRPT is a small Bash script that allows you to receive **LRPT images** from **Meteor M2 3** automatically by using **mlrpt**. The script only runs on **Linux** and can e. g. be used on a **Raspberry Pi**.<br />
+AutoLRPT is a small Bash script that allows you to receive **LRPT images** from **Meteor M2-3** and **Meteor M2-4** automatically by using **mlrpt**. The script only runs on **Linux** and can e. g. be used on a **Raspberry Pi**.<br />
 
 ## Dependencies
 * `mlrpt`
@@ -42,7 +42,12 @@ sudo apt install cmake make automake autoconf libtool rtl-sdr librtlsdr-dev
   nano default.cfg
   ```
   and change the following settings:
+
+  #### Meteor M2-3
   * **Satellite Transmitter Frequency in kHz**: `137100` to `137900`
+  * **Modulation Mode: 1 = QPSK  2 = DOQPSK  3 = IDOQPSK**: `1` to  `2`
+  #### Meteor M2-4
+  * **Satellite Transmitter Frequency in kHz**: `137100`
   * **Modulation Mode: 1 = QPSK  2 = DOQPSK  3 = IDOQPSK**: `1` to  `2`
 
 Unfortunately, `mlrpt` sometimes replaces the config file with one from `/usr/share/mlrpt/examples/config`. To avoid that you can delete the config files in `/usr/share/mlrpt/examples/config` and copy the config file `~/mlrpt/default.cfg` to `/usr/share/mlrpt/examples/config`:
@@ -78,6 +83,8 @@ Execute the script `set_location` and enter your **name/callsign**, **latitude**
 
 ### Updating the TLE data
 The so called **TLE data** is needed to calculate the position of a satellite at a given time and therefore also the pass times.<br />
+
+#### Meteor M2-3
 The script `tle_update` downloads the current TLE data from [N2YO.com](https://www.n2yo.com/satellite/?s=57166).<br />
 <br />
 You can choose whether the TLE should be updated automatically in regular intervals of 24 hours or if you want to update the TLE data manually. To update the TLE data in regular intervals, open the script and set the variable `tle_autoupd` to `true`.<br />
@@ -86,15 +93,31 @@ Then execute the script:<br />
 ./tle_update &
 ```
 
+#### Meteor M2-4
+So far there is no TLE data available for **Meteor M2-4** in official databases such as CelesTrak. You can temporarily use the TLE data from this Facebook post:<br />
+https://www.facebook.com/groups/Satellite.apt.group/permalink/2543718782478208/<br />
+<br />
+Copy the two lines that are starting with **1** and **2**.<br />
+Open the file `~/.predict/predict.tle`, create a new line and enter the name of the satellite:
+```
+METEOR-M2-4
+```
+Paste the two lines you have copied below the satellite's name
+
 ## Usage
 Start `AutoLRPT` **from inside its directory**:<br />
+#### Meteor M2-3
 ```
-./AutoLRPT &
+./AutoLRPT_Meteor_M2-3 &
+```
+#### Meteor M2-4
+```
+./AutoLRPT_Meteor_M2-3 &
 ```
 The `&` will execute the script in the background.
 <br />
 <br />
-Now `mlrpt` should start automatially when **Meteor M2 3** passes over. You don't need to start `AutoLRPT` again manually afer the pass, since `AutoLRPT` will automatically schedule the next pass.<br />
+Now `mlrpt` should start automatially when **Meteor M2 3** or **Meteor M2-4** passes over. You don't need to start `AutoLRPT` again manually afer the pass, since `AutoLRPT` will automatically schedule the next pass.<br />
 <br />
 **Be sure to exit the console on which you have started `AutoLRPT` by running**<br />
 ```
@@ -104,10 +127,14 @@ exit
 <br />
 
 If you want to stop AutoLRPT<br />
+#### Meteor M2-3
 ```
-killall AutoLRPT
+killall AutoLRPT_Meteor_M2-3
 ```
-
+#### Meteor M2-4
+```
+killall AutoLRPT_Meteor_M2-4
+```
 
 ## Additional options
 You can change the following settings in `AutoLRPT.cfg` according to your needs:
@@ -136,7 +163,7 @@ You can change the following settings in `AutoLRPT.cfg` according to your needs:
 * **Logging**<br />
   `AutoLRPT` can log information about the passes and the recording status in the file `AutoLRPT.log`<br /><br />
   The logs will have the folloing format:<br />
-  `PassDate PassTime MaxElevation Azimuth Status`<br/>
+  `SatelliteName PassDate PassTime MaxElevation Azimuth Status`<br/>
   Please note that the date and time are in **UTC**
 
   The `Status` gives some information about the success of the reception:
