@@ -94,8 +94,7 @@ Then execute the script:<br />
 ```
 
 #### Meteor M2-4
-So far there is no TLE data available for **Meteor M2-4** in official databases such as CelesTrak. You can temporarily use the TLE data from this Facebook post:<br />
-https://www.facebook.com/groups/Satellite.apt.group/permalink/2543718782478208/<br />
+So far there is no TLE data available for **Meteor M2-4** in official databases such as CelesTrak. You can temporarily use the TLE data from this [Facebook post](https://www.facebook.com/groups/Satellite.apt.group/permalink/2543718782478208/).<br />
 <br />
 Copy the two lines that are starting with **1** and **2**.<br />
 Open the file `~/.predict/predict.tle`, create a new line and enter the name of the satellite:
