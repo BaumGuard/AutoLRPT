@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Including AutoLRPT's config file
-. AutoLRPT.cfg
+. Meteor_M2-4.cfg
 
 satname="METEOR-M2-4"
 
@@ -51,7 +51,7 @@ while true; do
 	# Variable for the recording success/failure
 		# IMAGE RECORDED    -> If an image was received and saved (successful execution of mlrpt)
 		# NO_IMAGE_RECORDED -> If no image was received (successful execution of mlrpt)
-		# NO_RECORDING      -> If the user disabled the recording (min_elev, evening_rec) under certain circumstances (no execution of mlrpt)
+		# NO_RECORDING      -> If the user disabled the recording (min_elev, night_rec) under certain circumstances (no execution of mlrpt)
 		# NO_SDR_CONNECTED  -> If mlrpt stops because no SDR was connected (unsuccessful execution of mlrpt)
 		# ERROR             -> Any other errors
 	rec_status=""
@@ -64,8 +64,8 @@ while true; do
 	# Minimum elevation check
 	if [[ $max_elev -ge $min_elev ]]; then
 
-		# Check if evening_rec is enabled/disabled and if it's night
-		if [[ $evening_rec -eq 1 ]] || [[ 10#$(date +"%H") -le 10 ]]; then
+		# Check if night_rec is enabled/disabled and if it's night
+		if [[ $night_rec -eq 1 ]] || [[ 10#$(date +"%H") -le 10 ]]; then
 
 			# Check if Autoflip is enabled and if it's afternoon
 			if [[ 10#$(date +"%H") -gt 10 ]] && [[ $autoflip -eq 1 ]]; then
@@ -101,8 +101,8 @@ while true; do
 	fi
 
 
-        # Writing the date, time, maximum elevation, medium azimuth and success/error into the log file AutoLRPT.log
-        [ $logging -eq 1 ] && printf "%s %s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) $satname $passtime $max_elev $azimuth $rec_status >> /var/www/html/log.txt
+    # Writing the date, time, maximum elevation, medium azimuth and success/error into the log file AutoLRPT.log
+    [ $logging -eq 1 ] && printf "%s %s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) $satname $passtime $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
 
 
 	# Moving the images to the webserver's image folder
