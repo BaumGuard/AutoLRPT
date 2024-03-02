@@ -23,7 +23,7 @@ while true; do
 	cur_ts=`date +%s`
 
 	# Writing the date and time of the upcomming path into the file next_pass
-	echo $(date -d @$pass_ts --utc "+%Y-%m-%d %H:%M:%S") > /var/www/html/next_pass
+	echo $(date -d @$pass_ts --utc "+%Y-%m-%d %H:%M:%S") > ~/AutoLRPT/AutoLRPT.log
 
 	# Get the UTC time of the upcoming pass from predict
 	passtime=`date -d @$pass_ts --utc "+%H:%M:%S"`
@@ -101,13 +101,13 @@ while true; do
 	fi
 
 
-    # Writing the date, time, maximum elevation, medium azimuth and success/error into the log file AutoLRPT.log
-    [ $logging -eq 1 ] && printf "%s %s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) $passtime $satname $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
+    	# Writing the date, time, maximum elevation, medium azimuth and success/error into the log file AutoLRPT.log
+    	[ $logging -eq 1 ] && printf "%s %s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) $passtime $satname $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
 
 
 	# Moving the images to the webserver's image folder
 	# The webserver's image folder (in the case below /var/www/html/images) must have writing permissions for that!
-	[[ $(ls ~/mlrpt/images) != "" ]] && mv ~/mlrpt/images/* /var/www/html/images
+	#[[ $(ls ~/mlrpt/images) != "" ]] && mv ~/mlrpt/images/* /var/www/html/images
 
 
 	# Wait for 20 minutes until the next pass is being scheduled
