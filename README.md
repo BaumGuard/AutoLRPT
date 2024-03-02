@@ -85,21 +85,21 @@ Execute the script `set_location` and enter your **name/callsign**, **latitude**
 The so called **TLE data** is needed to calculate the position of a satellite at a given time and therefore also the pass times.<br />
 
 #### Meteor M2-3
-The script `tle_update` downloads the current TLE data from [N2YO.com](https://www.n2yo.com/satellite/?s=57166).<br />
+The script `TLE_Meteor_M2-3` downloads the current TLE data from [CelesTrak](https://celestrak.org/NORAD/elements/gp.php?CATNR=57166).<br />
 <br />
-You can choose whether the TLE should be updated automatically in regular intervals of 24 hours or if you want to update the TLE data manually. To update the TLE data in regular intervals, open the script and set the variable `tle_autoupd` to `true`.<br />
+You can choose whether the TLE should be updated automatically in regular intervals of 24 hours or if you want to update the TLE data manually. To update the TLE data in regular intervals, open the script and set the variable `autoupd` to `1`.<br />
 Then execute the script:<br />
 ```
-./tle_update &
+./TLE_Meteor_M2-3 &
 ```
 
 #### Meteor M2-4
-So far there is no TLE data available for **Meteor M2-4** in official databases such as CelesTrak. You can temporarily use the TLE data from this [Facebook post](https://www.facebook.com/groups/Satellite.apt.group/permalink/2543718782478208/).<br />
+The script `TLE_Meteor_M2-4` downloads the current TLE data from [CelesTrak](https://celestrak.org/NORAD/elements/gp.php?CATNR=59051).<br />
 <br />
-Copy the two lines that are starting with **1** and **2**.<br />
-Open the file `~/.predict/predict.tle`, create a new line and enter the name of the satellite:
+You can choose whether the TLE should be updated automatically in regular intervals of 24 hours or if you want to update the TLE data manually. To update the TLE data in regular intervals, open the script and set the variable `autoupd` to `1`.<br />
+Then execute the script:<br />
 ```
-METEOR-M2-4
+./TLE_Meteor_M2-4 &
 ```
 Paste the two lines you have copied below the satellite's name
 
