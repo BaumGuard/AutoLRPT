@@ -141,12 +141,19 @@ You can change the following settings in `AutoLRPT.cfg` according to your needs:
   Only record passes that have at least the given elevation.
   * Variable: `min_elev`
   * Possible values: `0 - 90`
-* **Recording in the evening**<br />
+* **Recording in the evening (Meteor M2-3)**<br />
   Due to a worse solar illumation by the sun, the images recorded in the evenings usually are rather dark and don't show that many details. You can choose whether you want `AutoLRPT` to record passes in the evenings or not
   * Variable: `evening_rec`
   * Possible values:
     * `0`: Evening recording disabled
     * `1`: Evening recording enabled
+* **Recording in the night (Meteor M2-4)**<br />
+ Due to a worse solar illumation by the sun, the images recorded in the night usually are rather dark and don't show that many details. You can choose whether you want `AutoLRPT` to record passes in the evenings or not
+  * Variable: `night_rec`
+  * Possible values:
+    * `0`: Evening recording disabled
+    * `1`: Evening recording enabled
+ 
 * **Autoflip**<br />
   Because **Meteor M2 3** and all the other LEO satellites will pass over from South to North in the evenings, the images will be upside down by default, but `mlrpt` can flip them. You can choose whether you want `mlrpt` to flip the images of evening passes automatically
   * Variable: `autoflip`
@@ -162,7 +169,7 @@ You can change the following settings in `AutoLRPT.cfg` according to your needs:
 * **Logging**<br />
   `AutoLRPT` can log information about the passes and the recording status in the file `AutoLRPT.log`<br /><br />
   The logs will have the folloing format:<br />
-  `SatelliteName PassDate PassTime MaxElevation Azimuth Status`<br/>
+  `PassDate PassTime SatelliteName MaxElevation Azimuth Status`<br/>
   Please note that the date and time are in **UTC**
 
   The `Status` gives some information about the success of the reception:
