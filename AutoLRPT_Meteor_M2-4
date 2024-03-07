@@ -23,7 +23,7 @@ while true; do
 	cur_ts=`date +%s`
 
 	# Writing the date and time of the upcomming path into the file next_pass
-	echo $(date -d @$pass_ts --utc "+%Y-%m-%d %H:%M:%S") > ~/AutoLRPT/AutoLRPT.log
+	echo $(date -d @$pass_ts --utc "+%Y-%m-%d %H:%M:%S") > ~/AutoLRPT/next_pass
 
 	# Get the UTC time of the upcoming pass from predict
 	passtime=`date -d @$pass_ts --utc "+%H:%M:%S"`
@@ -69,10 +69,10 @@ while true; do
 
 			# Check if Autoflip is enabled and if it's afternoon
 			if [[ 10#$(date +"%H") -gt 10 ]] && [[ $autoflip -eq 1 ]]; then
-				mlrpt -i > ~/AutoLRPT/mlrpt.log 2>&1
+				mlrpt -c M2-4.cfg -i > ~/AutoLRPT/mlrpt.log 2>&1
 				success=$?
 			else
-				mlrpt > ~/AutoLRPT/mlrpt.log 2>&1
+				mlrpt -c M2-4.cfg > ~/AutoLRPT/mlrpt.log 2>&1
 				success=$?
 			fi
 		else
@@ -102,7 +102,7 @@ while true; do
 
 
     	# Writing the date, time, maximum elevation, medium azimuth and success/error into the log file AutoLRPT.log
-    	[ $logging -eq 1 ] && printf "%s %s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) $passtime "$satname" $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
+    	[ $logging -eq 1 ] && printf "%s %s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) $passtime \"$satname\" $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
 
 
 	# Moving the images to the webserver's image folder
