@@ -37,11 +37,13 @@ sudo apt install cmake make automake autoconf libtool rtl-sdr librtlsdr-dev
   mv images default.cfg ..
   cd ..
   ```
-5. Open the config file `default.cfg` with your prefered text editor
-  ```
-  nano default.cfg
-  ```
-  and change the following settings:
+5. Create two copies of `default.cfg` named `M2-3.cfg` and `M2-4.cfg`:
+   ```
+   scp default.cfg M2-3.cfg
+   scp default.cfg M2-4.cfg
+   ```
+
+  Open the two config files with your favourite editor and change the following settings:
 
   #### Meteor M2-3
   * **Satellite Transmitter Frequency in kHz**: `137100` to `137900`
@@ -74,7 +76,7 @@ cd AutoLRPT
 ```
 Make the scripts executable:
 ```
-chmod +x AutoLRPT set_location tle_update
+chmod +x AutoLRPT_Meteor_M2-3 AutoLRPT_Meteor_M2-4 set_location TLE_Meteor_M2-3 TLE_Meteor_M2-4
 ```
 Execute the script `set_location` and enter your **name/callsign**, **latitude**, **longitude** and **altitude**:
 ```
