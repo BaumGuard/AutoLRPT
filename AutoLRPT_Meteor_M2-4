@@ -65,10 +65,10 @@ while true; do
 	if [[ $max_elev -ge $min_elev ]]; then
 
 		# Check if night_rec is enabled/disabled and if it's night
-		if [[ $night_rec -eq 1 ]] || [[ 10#$(date +"%H") -gt 10 ]]; then
+		if [[ $night_rec -eq 1 ]] || [[ 10#$(date +"%H") -ge 10 ]]; then
 
 			# Check if Autoflip is enabled and if it's afternoon
-			if [[ 10#$(date +"%H") -gt 10 ]] && [[ $autoflip -eq 1 ]]; then
+			if [[ 10#$(date +"%H") -ge 10 ]] && [[ $autoflip -eq 1 ]]; then
 				mlrpt -c M2-4.cfg -i > ~/AutoLRPT/mlrpt.log 2>&1
 				success=$?
 			else
