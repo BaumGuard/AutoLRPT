@@ -113,7 +113,7 @@ Start `AutoLRPT` **from inside its directory**:<br />
 ```
 #### Meteor M2-4
 ```
-./AutoLRPT_Meteor_M2-3 &
+./AutoLRPT_Meteor_M2-4 &
 ```
 The `&` will execute the script in the background.
 <br />
