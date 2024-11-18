@@ -123,9 +123,9 @@ while true; do
     	[ $logging -eq 1 ] && printf "%s %s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) $passtime \"$satname\" $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
 
 
-	# Moving the images to the webserver's image folder
+	# Moving the images to the webserver's image folder (Extension AutoLRPT-Slideshow)
 	# The webserver's image folder (in the case below /var/www/html/images) must have writing permissions for that!
-	#[[ $(ls ~/mlrpt/images) != "" ]] && mv ~/mlrpt/images/* /var/www/html/images
+	#[[ $(ls ~/mlrpt/images) != "" ]] && mv ~/mlrpt/images/* /var/www/html/AutoLRPT-Slideshow/images
 
 
 	# Wait for 20 minutes until the next pass is being scheduled
