@@ -137,20 +137,6 @@ killall AutoLRPT_Meteor_M2-3
 killall AutoLRPT_Meteor_M2-4
 ```
 
-## Start on boot
-If you want to start AutoLRPT when the OS has booted you can create a cronjob
-```bash
-crontab -e
-```
-Select your favourite text editor and then enter the following two lines in the bottom of the file
-```
-@reboot /home/pi/AutoLRPT/AutoLRPT_M2-3
-@reboot /home/pi/AutoLRPT/AutoLRPT_M2-4
-```
-*If the scripts of `AutoLRPT` are in another directory or have a different name you have to the change the file path accordingly.*<br/>
-Exit the text editor.<br/>
-If you reboot your OS, `AutoLRPT` should be started automatically.
-
 ## Additional options
 You can change the following settings in `AutoLRPT.cfg` according to your needs:
 * **Minimum elevation**<br />
