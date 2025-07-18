@@ -11,19 +11,19 @@ AutoLRPT is a small Bash script that allows you to receive **LRPT images** from 
 You can follow the following instructions in case you are using a **Raspberry Pi** with **Raspberry Pi OS**. For other distros the setup should work similar but the names of the required packages might differ.<br />
 ### mlrpt
 On the mentioned OS you first have to install a bunch of packages that are needed by `mlrpt`:
-```
+```bash
 sudo apt install cmake make automake autoconf libtool rtl-sdr librtlsdr-dev
 ```
 1. Download the latest package of `mlrpt` from [5b4az.org](http://5b4az.org/pkg/lrpt). The name of the package should be something like `mlrpt-1.7.1.tar.bz2`. You can do that from the commandline by running
-  ```
+  ```bash
   wget http://5b4az.org/pkg/lrpt/mlrpt-1.7.1.tar.bz2
   ```
 2. Unzip the package:
-  ```
+  ```bash
   tar -jxvf mlrpt-1.7.1.tar.bz2
   ```
 3. Now enter the folder of mlrpt and execute the following commands after another:
-  ```
+  ```bash
   cd mlrpt-1.7.1
 
   ./autogen.sh
@@ -32,13 +32,13 @@ sudo apt install cmake make automake autoconf libtool rtl-sdr librtlsdr-dev
   sudo make install
   ```
 4. Enter the folder `mlrpt`, move the folder `images` and the config file `default.cfg` into previous directory and return to the previous directory:
-  ```
+  ```bash
   cd mlrpt
   mv images default.cfg ..
   cd ..
   ```
 5. Create two copies of `default.cfg` named `M2-3.cfg` and `M2-4.cfg`:
-   ```
+   ```bash
    scp default.cfg M2-3.cfg
    scp default.cfg M2-4.cfg
    ```
@@ -53,33 +53,48 @@ sudo apt install cmake make automake autoconf libtool rtl-sdr librtlsdr-dev
   * **Modulation Mode: 1 = QPSK  2 = DOQPSK  3 = IDOQPSK**: `1` to  `2`
 
 Unfortunately, `mlrpt` sometimes replaces the config file with one from `/usr/share/mlrpt/examples/config`. To avoid that you can delete the config files in `/usr/share/mlrpt/examples/config` and copy the config file `~/mlrpt/default.cfg` to `/usr/share/mlrpt/examples/config`:
-```
+```bash
 sudo rm /usr/local/share/mlrpt/examples/*.cfg
 sudo scp /home/user/mlrpt/default.cfg /usr/local/share/mlrpt/examples/config
 ```
 ### predict<br />
 For most distributions, `predict` is available in the official respositories. In case you can not find it there, you can also download it from [here](https://www.qsl.net/kd2bd/predict.html)<br />
 On **Raspberry Pi OS** and other Debian/Ubuntu-based distros you can install it with the following command:
-```
+```bash
 sudo apt install predict
 ```
+If you can't install `predict` from the repositories you can also download it from [here](https://www.qsl.net/kd2bd/predict-2.3.1.tar.gz)
+```bash
+wget https://www.qsl.net/kd2bd/predict-2.3.1.tar.gz
+```
+Unpack the *tar.gz* file
+```bash
+tar -xzf predict-2.3.1.tar.gz
+```
+Run the script `configure`
+```bash
+./configure
+```
+The script first checks for the existence of some libraries. If you haven't installed them already you can do so
+```bash
+sudo apt-get install libncurses5-dev libncursesw5-dev libasound2-dev
 
 ## Setup of AutoLRPT
 Clone AutoLRPT into your home directory:<br />
-```
+```bash
 cd
 git clone https://github.com/BaumGuard/AutoLRPT
 ```
 Enter the folder of AutoLRPT:
-```
+```bash
 cd AutoLRPT
 ```
 Make the scripts executable:
-```
-chmod +x AutoLRPT_Meteor_M2-3 AutoLRPT_Meteor_M2-4 set_location TLE_Meteor_M2-3 TLE_Meteor_M2-4
+```bash
+chmod +x AutoLRPT_Meteor_M2-3 AutoLRPT_Meteor_M2-4 set_location tle_update
 ```
 Execute the script `set_location` and enter your **name/callsign**, **latitude**, **longitude** and **altitude**:
-```
+```bash
 ./set_location
 ```
 
@@ -87,32 +102,22 @@ Execute the script `set_location` and enter your **name/callsign**, **latitude**
 The so called **TLE data** is needed to calculate the position of a satellite at a given time and therefore also the pass times.<br />
 
 #### Meteor M2-3
-The script `TLE_Meteor_M2-3` downloads the current TLE data from [CelesTrak](https://celestrak.org/NORAD/elements/gp.php?CATNR=57166).<br />
+The script `tle_update` downloads the current TLE data for Meteor-M2 3 and Meteor-M2 4 from *CelesTrak* and writes it to the file `~/.predict/predict.tle`.<br />
 <br />
 You can choose whether the TLE should be updated automatically in regular intervals of 24 hours or if you want to update the TLE data manually. To update the TLE data in regular intervals, open the script and set the variable `autoupd` to `1`.<br />
 Then execute the script:<br />
+```bash
+./tle_update
 ```
-./TLE_Meteor_M2-3 &
-```
-
-#### Meteor M2-4
-The script `TLE_Meteor_M2-4` downloads the current TLE data from [CelesTrak](https://celestrak.org/NORAD/elements/gp.php?CATNR=59051).<br />
-<br />
-You can choose whether the TLE should be updated automatically in regular intervals of 24 hours or if you want to update the TLE data manually. To update the TLE data in regular intervals, open the script and set the variable `autoupd` to `1`.<br />
-Then execute the script:<br />
-```
-./TLE_Meteor_M2-4 &
-```
-Paste the two lines you have copied below the satellite's name
 
 ## Usage
 Start `AutoLRPT` **from inside its directory**:<br />
 #### Meteor M2-3
-```
+```bash
 ./AutoLRPT_Meteor_M2-3 &
 ```
 #### Meteor M2-4
-```
+```bash
 ./AutoLRPT_Meteor_M2-4 &
 ```
 The `&` will execute the script in the background.
@@ -121,7 +126,7 @@ The `&` will execute the script in the background.
 Now `mlrpt` should start automatially when **Meteor M2 3** or **Meteor M2-4** passes over. You don't need to start `AutoLRPT` again manually afer the pass, since `AutoLRPT` will automatically schedule the next pass.<br />
 <br />
 **Be sure to exit the console on which you have started `AutoLRPT` by running**<br />
-```
+```bash
 exit
 ```
 <br />**Otherways `AutoLRPT` will be stopped!**
@@ -129,11 +134,11 @@ exit
 
 If you want to stop AutoLRPT<br />
 #### Meteor M2-3
-```
+```bash
 killall AutoLRPT_Meteor_M2-3
 ```
 #### Meteor M2-4
-```
+```bash
 killall AutoLRPT_Meteor_M2-4
 ```
 
