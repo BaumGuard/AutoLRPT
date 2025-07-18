@@ -78,7 +78,7 @@ Run the script `configure`
 The script first checks for the existence of some libraries. If you haven't installed them already you can do so
 ```bash
 sudo apt-get install libncurses5-dev libncursesw5-dev libasound2-dev
-
+```
 ## Setup of AutoLRPT
 Clone AutoLRPT into your home directory:<br />
 ```bash
@@ -101,7 +101,6 @@ Execute the script `set_location` and enter your **name/callsign**, **latitude**
 ### Updating the TLE data
 The so called **TLE data** is needed to calculate the position of a satellite at a given time and therefore also the pass times.<br />
 
-#### Meteor M2-3
 The script `tle_update` downloads the current TLE data for Meteor-M2 3 and Meteor-M2 4 from *CelesTrak* and writes it to the file `~/.predict/predict.tle`.<br />
 <br />
 You can choose whether the TLE should be updated automatically in regular intervals of 24 hours or if you want to update the TLE data manually. To update the TLE data in regular intervals, open the script and set the variable `autoupd` to `1`.<br />
