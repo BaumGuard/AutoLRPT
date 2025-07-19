@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Including AutoLRPT's config file
-. Meteor_M2-4.cfg
+. ~/AutoLRPT/M2-4.conf
 
 satname="METEOR-M2 4"
 

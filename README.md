@@ -20,7 +20,7 @@ sudo apt install cmake make automake autoconf libtool rtl-sdr librtlsdr-dev
   ```
 2. Unzip the package:
   ```bash
-  tar -jxvf mlrpt-1.7.1.tar.bz2
+  tar -jxf mlrpt-1.7.1.tar.bz2
   ```
 3. Now enter the folder of mlrpt and execute the following commands after another:
   ```bash
@@ -54,7 +54,7 @@ sudo apt install cmake make automake autoconf libtool rtl-sdr librtlsdr-dev
 
 Unfortunately, `mlrpt` sometimes replaces the config file with one from `/usr/share/mlrpt/examples/config`. To avoid that you can delete the config files in `/usr/share/mlrpt/examples/config` and copy the config file `~/mlrpt/default.cfg` to `/usr/share/mlrpt/examples/config`:
 ```bash
-sudo rm /usr/local/share/mlrpt/examples/*.cfg
+sudo rm -r /usr/local/share/examples/mlrpt
 sudo scp /home/user/mlrpt/default.cfg /usr/local/share/mlrpt/examples/config
 ```
 ### predict<br />
@@ -91,7 +91,7 @@ cd AutoLRPT
 ```
 Make the scripts executable:
 ```bash
-chmod +x AutoLRPT_Meteor_M2-3 AutoLRPT_Meteor_M2-4 set_location tle_update
+chmod +x AutoLRPT_M2-3 AutoLRPT_M2-4 set_location tle_update
 ```
 Execute the script `set_location` and enter your **name/callsign**, **latitude**, **longitude** and **altitude**:
 ```bash
@@ -113,11 +113,11 @@ Then execute the script:<br />
 Start `AutoLRPT` **from inside its directory**:<br />
 #### Meteor M2-3
 ```bash
-./AutoLRPT_Meteor_M2-3 &
+./AutoLRPT_M2-3 &
 ```
 #### Meteor M2-4
 ```bash
-./AutoLRPT_Meteor_M2-4 &
+./AutoLRPT_M2-4 &
 ```
 The `&` will execute the script in the background.
 <br />
@@ -134,15 +134,27 @@ exit
 If you want to stop AutoLRPT<br />
 #### Meteor M2-3
 ```bash
-killall AutoLRPT_Meteor_M2-3
+killall AutoLRPT_M2-3
 ```
 #### Meteor M2-4
 ```bash
-killall AutoLRPT_Meteor_M2-4
+killall AutoLRPT_M2-4
 ```
 
+### Start on boot
+If you want to start AutoLRPT automatically when booting the Raspberry Pi you can add a `cronjob` for both AutoLRPT scripts
+```bash
+crontab -e
+```
+Append these two lines on the bottom of the file
+```
+@reboot ~/AutoLRPT/AutoLRPT_M2-3
+@reboot ~/AutoLRPT/AutoLRPT_M2-4
+```
+Now both AutoLRPT scripts should start automatically after every boot.
+
 ## Additional options
-You can change the following settings in `AutoLRPT.cfg` according to your needs:
+You can change the following settings in `M2-3.conf` and `M2-4.conf` according to your needs:
 * **Minimum elevation**<br />
   Only record passes that have at least the given elevation.
   * Variable: `min_elev`

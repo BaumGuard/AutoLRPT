@@ -1,0 +1,117 @@
+#!/bin/bash
+
+# Including AutoLRPT's config file
+. ~/AutoLRPT/M2-3.conf
+
+satname="METEOR-M2 4"
+
+# Get the timestamp of the upcoming/current pass and the current timestamp
+pass_ts=`predict -p "$satname" | awk '{print $1}' | head -n1`
+cur_ts=`date +%s`
+
+# If the pass's timestamp is less than the current timestamp, wait for 20 minutes before progressing.
+# This ensures that if AutoLRPT is being started during a pass, it will get the time of the upcoming pass
+# otherways it will wait until the next day.
+[[ $pass_ts -le $cur_ts ]] && sleep 20m
+
+
+# Infinite loop that will always schedule the next pass after the recent one is over
+while true; do
+
+	# Get the timestamp of the upcoming/current pass and the current timestamp
+	pass_ts=`predict -p "$satname" | awk '{print $1}' | head -n1`
+	cur_ts=`date +%s`
+
+	# Writing the date and time of the upcomming path into the file next_pass
+	echo $(date -d @$pass_ts --utc "+%Y-%m-%d %H:%M:%S") > ~/AutoLRPT/next_pass
+
+	# Get the UTC time of the upcoming pass from predict
+	passtime=`date -d @$pass_ts --utc "+%H:%M:%S"`
+
+	# Calculate the difference between the system time and the pass time
+	difr=$(( $pass_ts - $cur_ts ))
+
+	# Getting the elevations of the upcoming pass from predict and parsing them into an array.
+	elevs=`predict '-p' "$satname" | awk '{print $5}'`
+	readarray -t elev_array <<< $elevs
+
+	# Getting the maximum elevation of the upcoming pass.
+	IFS=$'\n'
+	max_elev=`echo "${elev_array[*]}" | sort -nr | head -n1`
+
+	# Getting the azimuths of the upcoming pass from predict and extracting the medium azimuth.
+	readarray -t azimuth <<< $(predict -p "$satname" | awk '{print $6}')
+	azimuth=${azimuth[ $(( ${#azimuth[@]} / 2 )) ]}
+
+
+	# Wait until the pass begins
+	sleep "$difr"s
+
+
+	# Variable for the recording success/failure
+		# IMAGE RECORDED    -> If an image was received and saved (successful execution of mlrpt)
+		# NO_IMAGE_RECORDED -> If no image was received (successful execution of mlrpt)
+		# NO_RECORDING      -> If the user disabled the recording (min_elev, night_rec) under certain circumstances (no execution of mlrpt)
+		# NO_SDR_CONNECTED  -> If mlrpt stops because no SDR was connected (unsuccessful execution of mlrpt)
+		# ERROR             -> Any other errors
+	rec_status=""
+
+	# Variable to save the error code after executing mlrpt
+	# 0 -> successful, >0 -> not successful
+	success=1
+
+
+	# Minimum elevation check
+	if [[ $max_elev -ge $min_elev ]]; then
+
+		# Check if night_rec is enabled/disabled and if it's night
+		if [[ $night_rec -eq 1 ]] || [[ 10#$(date +"%H") -ge 10 ]]; then
+
+			# Check if Autoflip is enabled and if it's afternoon
+			if [[ 10#$(date +"%H") -ge 10 ]] && [[ $autoflip -eq 1 ]]; then
+				mlrpt -c M2-4.cfg -i > ~/AutoLRPT/mlrpt.log 2>&1
+				success=$?
+			else
+				mlrpt -c M2-4.cfg > ~/AutoLRPT/mlrpt.log 2>&1
+				success=$?
+			fi
+		else
+			rec_status="NO_RECORDING"
+		fi
+	else
+		rec_status="NO_RECORDING"
+	fi
+
+
+	# Generating the status
+	if [[ $success -eq 0 ]] && [[ $rec_status != "NO_RECORDING" ]]; then
+		if [[ -z $(grep "Saving Image" ~/AutoLRPT/mlrpt.log) ]]; then
+			rec_status="NO_IMAGE_RECORDED"
+		else
+			rec_status="IMAGE_RECORDED"
+		fi
+	fi
+
+	if [[ $success -ne 0 ]] && [[ $rec_status != "NO_RECORDING" ]]; then
+		if [[ -z $(grep "Failed to open RTL-SDR device" ~/AutoLRPT/mlrpt.log) ]]; then
+			rec_status="ERROR"
+		else
+			rec_status="NO_SDR_CONNECTED"
+		fi
+	fi
+
+
+    	# Writing the date, time, maximum elevation, medium azimuth and success/error into the log file AutoLRPT.log
+    	[ $logging -eq 1 ] && printf "%s %s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) $passtime \"$satname\" $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
+
+
+	# Moving the images to the webserver's image folder (Extension AutoLRPT-Slideshow)
+	# The webserver's image folder (in the case below /var/www/html/images) must have writing permissions for that!
+	#[[ $(ls ~/mlrpt/images) != "" ]] && mv ~/mlrpt/images/* /var/www/html/AutoLRPT-Slideshow/images
+
+
+	# Wait for 20 minutes until the next pass is being scheduled
+	# (This will ensure that the next pass will be scheduled although no SDR has been connected)
+	sleep 20m
+
+done
