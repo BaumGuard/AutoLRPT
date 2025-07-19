@@ -3,7 +3,7 @@
 # Including AutoLRPT's config file
 . ~/AutoLRPT/M2-3.conf
 
-satname="METEOR-M2 4"
+satname="METEOR-M2 3"
 
 # Get the timestamp of the upcoming/current pass and the current timestamp
 pass_ts=`predict -p "$satname" | awk '{print $1}' | head -n1`
