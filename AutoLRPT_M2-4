@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Including AutoLRPT's config file
-. ~/AutoLRPT/M2-4.conf
-
 satname="METEOR-M2 4"
 
 # Get the timestamp of the upcoming/current pass and the current timestamp
@@ -17,6 +14,9 @@ cur_ts=`date +%s`
 
 # Infinite loop that will always schedule the next pass after the recent one is over
 while true; do
+
+	# Including AutoLRPT's config file
+	. ~/AutoLRPT/M2-4.conf
 
 	# Get the timestamp of the upcoming/current pass and the current timestamp
 	pass_ts=`predict -p "$satname" | awk '{print $1}' | head -n1`
@@ -107,8 +107,14 @@ while true; do
 
 	# Moving the images to the webserver's image folder (Extension AutoLRPT-Slideshow)
 	# The webserver's image folder (in the case below /var/www/html/images) must have writing permissions for that!
-	#[[ $(ls ~/mlrpt/images) != "" ]] && mv ~/mlrpt/images/* /var/www/html/AutoLRPT-Slideshow/images
 
+	# if [[ $(ls ~/mlrpt/images) != "" ]]; then
+    #     for file in $(ls -1 ~/mlrpt/images); do
+    #         convert ~/mlrpt/images/$file -resize 50% -quality 10 /var/www/html/images/compressed/$file
+    #     done
+
+    #     mv ~/mlrpt/images/* /var/www/html/images
+    # fi
 
 	# Wait for 20 minutes until the next pass is being scheduled
 	# (This will ensure that the next pass will be scheduled although no SDR has been connected)
