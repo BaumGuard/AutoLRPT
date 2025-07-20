@@ -14,48 +14,30 @@ On the mentioned OS you first have to install a bunch of packages that are neede
 ```bash
 sudo apt install cmake make automake autoconf libtool rtl-sdr librtlsdr-dev
 ```
-1. Download the latest package of `mlrpt` from [5b4az.org](http://5b4az.org/pkg/lrpt). The name of the package should be something like `mlrpt-1.7.1.tar.bz2`. You can do that from the commandline by running
-  ```bash
-  wget http://5b4az.org/pkg/lrpt/mlrpt-1.7.1.tar.bz2
-  ```
-2. Unzip the package:
-  ```bash
-  tar -jxf mlrpt-1.7.1.tar.bz2
-  ```
-3. Now enter the folder of mlrpt and execute the following commands after another:
-  ```bash
-  cd mlrpt-1.7.1
-
-  ./autogen.sh
-  ./configure
-  make
-  sudo make install
-  ```
-4. Enter the folder `mlrpt`, move the folder `images` and the config file `default.cfg` into previous directory and return to the previous directory:
-  ```bash
-  cd mlrpt
-  mv images default.cfg ..
-  cd ..
-  ```
-5. Create two copies of `default.cfg` named `M2-3.cfg` and `M2-4.cfg`:
+The repository of AutoLRPT contains a modified version of mlrpt. It adds an option in the config files to set the pattern of the file name, so that [AutoLRPT-Slideshow](https://www.github.com/BaumGuard/AutoLRPT-Slideshow) can handle the image files better.
+1. Move `mlrpt.tar.gz` to the home folder
    ```bash
-   scp default.cfg M2-3.cfg
-   scp default.cfg M2-4.cfg
+   mv mlrpt.tar.gz ..
+   cd
+   ```
+2. Unzip the package:
+   ```bash
+   tar -xzf mlrpt.tar.gz
+   ```
+3. Now enter the folder of mlrpt and execute the following commands after another:
+   ```bash
+   cd mlrpt
+
+   ./autogen.sh
+   ./configure
+   make
+   sudo make install
    ```
 
-  Open the two config files with your favourite editor and change the following settings:
-
-  #### Meteor M2-3
-  * **Satellite Transmitter Frequency in kHz**: `137100` to `137900`
-  * **Modulation Mode: 1 = QPSK  2 = DOQPSK  3 = IDOQPSK**: `1` to  `2`
-  #### Meteor M2-4
-  * **Satellite Transmitter Frequency in kHz**: `137100`
-  * **Modulation Mode: 1 = QPSK  2 = DOQPSK  3 = IDOQPSK**: `1` to  `2`
-
-Unfortunately, `mlrpt` sometimes replaces the config file with one from `/usr/share/mlrpt/examples/config`. To avoid that you can delete the config files in `/usr/share/mlrpt/examples/config` and copy the config file `~/mlrpt/default.cfg` to `/usr/share/mlrpt/examples/config`:
+Unfortunately, `mlrpt` sometimes replaces the config file with one from `/usr/share/examples/mlrpt/config`. To avoid that you can delete the config files in `/usr/share/mlrpt/examples/config` and copy the config file `~/mlrpt/default.cfg` to `/usr/share/mlrpt/examples/config`:
 ```bash
 sudo rm -r /usr/local/share/examples/mlrpt
-sudo scp /home/user/mlrpt/default.cfg /usr/local/share/mlrpt/examples/config
+sudo scp /home/user/mlrpt/default.cfg /usr/local/share/examples/mlrpt/config
 ```
 ### predict<br />
 For most distributions, `predict` is available in the official respositories. In case you can not find it there, you can also download it from [here](https://www.qsl.net/kd2bd/predict.html)<br />
@@ -69,7 +51,9 @@ wget https://www.qsl.net/kd2bd/predict-2.3.1.tar.gz
 ```
 Unpack the *tar.gz* file
 ```bash
+cd
 tar -xzf predict-2.3.1.tar.gz
+cd predict-2.3.1
 ```
 Run the script `configure`
 ```bash

@@ -6,23 +6,27 @@ satname="METEOR-M2 4"
 pass_ts=`predict -p "$satname" | awk '{print $1}' | head -n1`
 cur_ts=`date +%s`
 
-# If the pass's timestamp is less than the current timestamp, wait for 20 minutes before progressing.
-# This ensures that if AutoLRPT is being started during a pass, it will get the time of the upcoming pass
-# otherways it will wait until the next day.
+# If the pass's timestamp is less than the current timestamp,
+# wait for 20 minutes before progressing. This ensures that if
+# AutoLRPT is being started during a pass, it will get the time
+# of the upcoming pass otherways it will wait until the next day.
 [[ $pass_ts -le $cur_ts ]] && sleep 20m
 
 
-# Infinite loop that will always schedule the next pass after the recent one is over
+# Infinite loop that will always schedule the next pass after
+# the recent one is over
 while true; do
 
 	# Including AutoLRPT's config file
 	. ~/AutoLRPT/M2-4.conf
 
-	# Get the timestamp of the upcoming/current pass and the current timestamp
+	# Get the timestamp of the upcoming/current pass and the
+	# current timestamp
 	pass_ts=`predict -p "$satname" | awk '{print $1}' | head -n1`
 	cur_ts=`date +%s`
 
-	# Writing the date and time of the upcomming path into the file next_pass
+	# Writing the date and time of the upcomming path into
+	# the file next_pass
 	echo $(date -d @$pass_ts --utc "+%Y-%m-%d %H:%M:%S") > ~/AutoLRPT/next_pass
 
 	# Get the UTC time of the upcoming pass from predict
@@ -31,7 +35,8 @@ while true; do
 	# Calculate the difference between the system time and the pass time
 	difr=$(( $pass_ts - $cur_ts ))
 
-	# Getting the elevations of the upcoming pass from predict and parsing them into an array.
+	# Getting the elevations of the upcoming pass from predict and
+	# parsing them into an array.
 	elevs=`predict '-p' "$satname" | awk '{print $5}'`
 	readarray -t elev_array <<< $elevs
 
@@ -39,7 +44,8 @@ while true; do
 	IFS=$'\n'
 	max_elev=`echo "${elev_array[*]}" | sort -nr | head -n1`
 
-	# Getting the azimuths of the upcoming pass from predict and extracting the medium azimuth.
+	# Getting the azimuths of the upcoming pass from predict and extracting
+	# the medium azimuth.
 	readarray -t azimuth <<< $(predict -p "$satname" | awk '{print $6}')
 	azimuth=${azimuth[ $(( ${#azimuth[@]} / 2 )) ]}
 
@@ -49,11 +55,16 @@ while true; do
 
 
 	# Variable for the recording success/failure
-		# IMAGE RECORDED    -> If an image was received and saved (successful execution of mlrpt)
-		# NO_IMAGE_RECORDED -> If no image was received (successful execution of mlrpt)
-		# NO_RECORDING      -> If the user disabled the recording (min_elev, night_rec) under certain circumstances (no execution of mlrpt)
-		# NO_SDR_CONNECTED  -> If mlrpt stops because no SDR was connected (unsuccessful execution of mlrpt)
-		# ERROR             -> Any other errors
+		# IMAGE RECORDED    -> 	If an image was received and saved
+		# 						(successful execution of mlrpt)
+		# NO_IMAGE_RECORDED -> 	If no image was received
+		#						(successful execution of mlrpt)
+		# NO_RECORDING      -> 	If the user disabled the recording
+		#						(min_elev, night_rec) under certain
+		#						circumstances (no execution of mlrpt)
+		# NO_SDR_CONNECTED  -> 	If mlrpt stops because no SDR was connected
+		#						(unsuccessful execution of mlrpt)
+		# ERROR             -> 	Any other errors
 	rec_status=""
 
 	# Variable to save the error code after executing mlrpt
@@ -101,23 +112,28 @@ while true; do
 	fi
 
 
-    	# Writing the date, time, maximum elevation, medium azimuth and success/error into the log file AutoLRPT.log
+    	# Writing the date, time, maximum elevation, medium azimuth and
+    	# success/error into the log file AutoLRPT.log
     	[ $logging -eq 1 ] && printf "%s %s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) $passtime \"$satname\" $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
 
 
-	# Moving the images to the webserver's image folder (Extension AutoLRPT-Slideshow)
-	# The webserver's image folder (in the case below /var/www/html/images) must have writing permissions for that!
+	# Moving the images to the webserver's image folder
+	# (Extension AutoLRPT-Slideshow)
+	# The webserver's image folder (in the case below /var/www/html/images)
+	# must have writing permissions for that!
 
 	# if [[ $(ls ~/mlrpt/images) != "" ]]; then
     #     for file in $(ls -1 ~/mlrpt/images); do
-    #         convert ~/mlrpt/images/$file -resize 50% -quality 10 /var/www/html/images/compressed/$file
+    #         convert ~/mlrpt/images/$file -resize 50% -quality 10 \
+    # 			/var/www/html/images/compressed/$file
     #     done
 
     #     mv ~/mlrpt/images/* /var/www/html/images
     # fi
 
 	# Wait for 20 minutes until the next pass is being scheduled
-	# (This will ensure that the next pass will be scheduled although no SDR has been connected)
+	# (This will ensure that the next pass will be scheduled
+	# although no SDR has been connected)
 	sleep 20m
 
 done
