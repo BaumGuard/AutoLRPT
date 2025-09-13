@@ -60,7 +60,7 @@ while true; do
 		# NO_IMAGE_RECORDED -> 	If no image was received
 		# 						(successful execution of mlrpt)
 		# NO_RECORDING      -> 	If the user disabled the recording
-		#						(min_elev, night_rec)
+		#						(min_elev, evening_rec)
 		#						under certain circumstances
 		# 						(no execution of mlrpt)
 		# NO_SDR_CONNECTED  -> 	If mlrpt stops because no SDR was connected
@@ -76,24 +76,30 @@ while true; do
 	# Minimum elevation check
 	if [[ $max_elev -ge $min_elev ]]; then
 
-		# Check if night_rec is enabled/disabled and if it's night
-		if [[ $night_rec -eq 1 ]] || [[ 10#$(date +"%H") -ge 12 ]]; then
+		# Morning time
+		if [[ 10#$(date "+%H") -le 13 ]]; then
+			mlrpt -c M2-3.cfg > ~/AutoLRPT/mlrpt.log 2>&1
+			success=$?
 
-			# Check if Autoflip is enabled and if it's afternoon
-			if [[ 10#$(date +"%H") -ge 10 ]] && [[ $autoflip -eq 1 ]]; then
-				mlrpt -c M2-3.cfg -i > ~/AutoLRPT/mlrpt.log 2>&1
-				success=$?
-			else
-				mlrpt -c M2-3.cfg > ~/AutoLRPT/mlrpt.log 2>&1
-				success=$?
-			fi
+		# Evening time
 		else
-			rec_status="NO_RECORDING"
+			# Start recording if evening recording is enabled
+			if [[ $evening_rec -eq 1 ]]; then
+
+				# Automatically flip the image after recording
+				if [[ $autoflip -eq 1 ]]; then	
+					mlrpt -c M2-3.cfg -i > ~/AutoLRPT/mlrpt.log 2>&1
+					success=$?
+				else
+					mlrpt -c M2-3.cfg > ~/AutoLRPT/mlrpt.log 2>&1
+					success=$?
+				fi
+			fi
 		fi
+
 	else
 		rec_status="NO_RECORDING"
 	fi
-
 
 	# Generating the status
 	if [[ $success -eq 0 ]] && [[ $rec_status != "NO_RECORDING" ]]; then
@@ -115,7 +121,7 @@ while true; do
 
 	# Writing the date, time, maximum elevation, medium azimuth and
 	# success/error into the log file AutoLRPT.log
-		if [[ $logging -eq 1 ]]; then
+	if [[ $logging -eq 1 ]]; then
 		printf "%s %s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) \
 			$passtime \"$satname\" $max_elev $azimuth $rec_status \
 			>> ~/AutoLRPT/AutoLRPT.log
@@ -127,14 +133,14 @@ while true; do
 	# The webserver's image folder (in the case below /var/www/html/images)
 	# must have writing permissions for that!
 
-	# if [[ $(ls ~/mlrpt/images) != "" ]]; then
-	# 	for file in $(ls -1 ~/mlrpt/images); do
-	# 		convert ~/mlrpt/images/$file -resize 50% -quality 10 \
-	# 			/var/www/html/images/compressed/$file
-	# 	done
+	if [[ $(ls ~/mlrpt/images) != "" ]]; then
+		for file in $(ls -1 ~/mlrpt/images); do
+			convert ~/mlrpt/images/$file -resize 50% -quality 10 \
+				/var/www/html/images/compressed/$file
+		done
 
-	# 	mv ~/mlrpt/images/* /var/www/html/images
-	# fi
+		mv ~/mlrpt/images/* /var/www/html/images
+	fi
 
 
 	# Wait for 20 minutes until the next pass is being scheduled
