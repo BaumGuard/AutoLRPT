@@ -75,24 +75,30 @@ while true; do
 	# Minimum elevation check
 	if [[ $max_elev -ge $min_elev ]]; then
 
-		# Check if night_rec is enabled/disabled and if it's night
-		if [[ $night_rec -eq 1 ]] || [[ 10#$(date +"%H") -ge 10 ]]; then
+		# Afternoon time
+		if [[ 10#$(date "+%H") -ge 9 ]]; then
 
-			# Check if Autoflip is enabled and if it's afternoon
-			if [[ 10#$(date +"%H") -ge 10 ]] && [[ $autoflip -eq 1 ]]; then
+			# Flip the image automatically after recording
+			if [[ $autoflip -eq 1 ]]; then
 				mlrpt -c M2-4.cfg -i > ~/AutoLRPT/mlrpt.log 2>&1
 				success=$?
 			else
 				mlrpt -c M2-4.cfg > ~/AutoLRPT/mlrpt.log 2>&1
 				success=$?
 			fi
+
+		# Nighttime
 		else
-			rec_status="NO_RECORDING"
+
+			# Record during nighttime if it is enabled
+			if [[ $night_rec -eq 1 ]]; then
+				mlrpt -c M2-4.cfg > ~/AutoLRPT/mlrpt.log 2>&1
+				success=$?
+			fi
 		fi
 	else
-		rec_status="NO_RECORDING"
+		rec_status=$?
 	fi
-
 
 	# Generating the status
 	if [[ $success -eq 0 ]] && [[ $rec_status != "NO_RECORDING" ]]; then
@@ -112,9 +118,13 @@ while true; do
 	fi
 
 
-    	# Writing the date, time, maximum elevation, medium azimuth and
-    	# success/error into the log file AutoLRPT.log
-    	[ $logging -eq 1 ] && printf "%s %s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) $passtime \"$satname\" $max_elev $azimuth $rec_status >> ~/AutoLRPT/AutoLRPT.log
+    # Writing the date, time, maximum elevation, medium azimuth and
+    # success/error into the log file AutoLRPT.log
+    if [ $logging -eq 1 ]; then
+		 printf "%s %s %s %2d %3d %s\n" $(date --utc +%Y-%m-%d) \
+		 	$passtime \"$satname\" $max_elev $azimuth $rec_status \
+			>> ~/AutoLRPT/AutoLRPT.log
+	fi
 
 
 	# Moving the images to the webserver's image folder
@@ -122,14 +132,14 @@ while true; do
 	# The webserver's image folder (in the case below /var/www/html/images)
 	# must have writing permissions for that!
 
-	# if [[ $(ls ~/mlrpt/images) != "" ]]; then
-    #     for file in $(ls -1 ~/mlrpt/images); do
-    #         convert ~/mlrpt/images/$file -resize 50% -quality 10 \
-    # 			/var/www/html/images/compressed/$file
-    #     done
+	if [[ $(ls ~/mlrpt/images) != "" ]]; then
+        for file in $(ls -1 ~/mlrpt/images); do
+            convert ~/mlrpt/images/$file -resize 50% -quality 10 \
+    			/var/www/html/images/compressed/$file
+        done
 
-    #     mv ~/mlrpt/images/* /var/www/html/images
-    # fi
+        mv ~/mlrpt/images/* /var/www/html/images
+    fi
 
 	# Wait for 20 minutes until the next pass is being scheduled
 	# (This will ensure that the next pass will be scheduled
