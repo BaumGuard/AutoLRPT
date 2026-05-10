@@ -35,10 +35,10 @@ read answer
 while true; do
 	echo -n > ~/.predict/predict.tle
 
-    tle=`curl https://celestrak.org/NORAD/elements/gp.php?CATNR=57166&FORMAT=tle`
+    tle=$(curl "https://celestrak.org/NORAD/elements/gp.php?CATNR=57166&FORMAT=tle")
     echo "$tle" >> ~/.predict/predict.tle
 	
-    tle=`curl https://celestrak.org/NORAD/elements/gp.php?CATNR=59051&FORMAT=tle`
+    tle=$(curl "https://celestrak.org/NORAD/elements/gp.php?CATNR=59051&FORMAT=tle")
     echo "$tle" >> ~/.predict/predict.tle
 
 
