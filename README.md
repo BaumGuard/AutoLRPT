@@ -1,6 +1,10 @@
 # AutoLRPT
 AutoLRPT is a small Bash script that allows you to receive **LRPT images** from **Meteor M2-3** and **Meteor M2-4** automatically by using **mlrpt**. The script only runs on **Linux** and can e. g. be used on a **Raspberry Pi**.<br />
 
+## Hardware
+A **Raspberry Pi 3** or a prior version likely has too few CPU power to be able to produce proper images. I have tried to run `mlrpt` on a **Raspberry Pi 3** and the images had a lot of interference stripes in them that weren't caused by the antenna, the radio equipment or some other external source, but by the decoder that apparently "choked" on part of the input data due to the slow CPU of a **Pi 3** or a prior version.<br />
+So in order to get proper images with the script in its current form you should at least go for a **Raspberry Pi 4**.
+
 ## Dependencies
 * `mlrpt`
   * Download **mlrpt** from [5B4AZ.com](http://5b4az.org)
